@@ -1,0 +1,15 @@
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\DataAccessLayer.dll.config
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\DataAccessLayer.dll
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\DataAccessLayer.pdb
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityFramework.dll
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.dll
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityFramework.xml
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.xml
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.csprojAssemblyReference.cache
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CoreCompileInputs.cache
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CopyComplete
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.dll
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.pdb
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityLayer.dll
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityLayer.pdb
+C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityLayer.dll.config
