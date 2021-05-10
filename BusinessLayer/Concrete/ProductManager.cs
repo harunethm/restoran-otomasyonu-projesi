@@ -11,23 +11,24 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    public class CategoryManager : ICategoryService
+    public class ProductManager : IProductService
     {
-        ICategory _category;
+        IProduct _product;
 
-        public CategoryManager(ICategory category)
+        public ProductManager(IProduct product)
         {
-            _category = category;
+            _product = product;
         }
 
-        public List<Category> ListAll()
+        public List<Product> ListAll()
         {
-            return _category.List();
+            return _product.List();
         }
 
-        public void AddCategory(Category p)
+        public void AddProduct(Product p)
         {
-            _category.Insert(p);
+            _product.Insert(p);
         }
+
     }
 }

@@ -1,0 +1,54 @@
+﻿@using EntityLayer.Concrete
+
+@{
+    List<Category> categories = ViewBag.categories;
+    List<Product> products = ViewBag.products;
+
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<link href="~/css/bootstrap.css" rel="stylesheet" />
+<script src="~/js/bootstrap.js"></script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Restoran İsmi</a>
+            <a class="float-end btn btn-info btn-sm" href="#">Giriş Yap</a>
+        </div>
+    </nav>
+    <div class="container container-fluid">
+        @foreach (var category in categories)
+        {
+            <h3>@category.CategoryName</h3>
+            <table class="table">
+                <tr>
+                    <th>Ürün Adı</th>
+                    <th>Ürün Açıklaması</th>
+                    <th>Fiyatı</th>
+                </tr>
+                @foreach (var product in products)
+                {
+                    if (product.CategoryID == category.CategoryID)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Description</td>
+                            <td>@product.Price</td>
+                        </tr>
+                    }
+                }
+            </table>
+            <br />
+        }
+
+        <a class="btn btn-primary" href="/MainMenu/AddProduct">Ürün Ekle</a>
+
+    </div>
+</body>
+</html>
