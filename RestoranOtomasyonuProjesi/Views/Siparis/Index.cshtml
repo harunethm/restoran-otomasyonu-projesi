@@ -1,0 +1,107 @@
+﻿@using EntityLayer.Concrete
+@model List<Table>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<link href="~/css/bootstrap.css" rel="stylesheet" />
+<script src="~/js/bootstrap.js"></script>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Restoran İsmi</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Sipariş</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Kasa</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ayarlar</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container container-fluid">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Masalar</button>
+                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Paket Servis</button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <!--tab masalar-->
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Opening Date
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <p>Masa @item.TableID</p>
+                            </td>
+
+                            <td>
+                                @switch (@item.Status)
+                                {
+                                    case 0:
+                                        <p>Boş</p>
+                                        break;
+                                    case 1:
+                                        <p>Dolu</p>
+                                        break;
+                                    case 2:
+                                        <p>Rezerve</p>
+                                        break;
+
+                                }
+                            </td>
+                            <td>
+                                @item.OpeningDate
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <a href="/Siparis/AddTable" class="btn btn-dark">Masa Ekle</a>
+
+            </div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+        </div>
+    </div>
+</body>
+
+</html>
