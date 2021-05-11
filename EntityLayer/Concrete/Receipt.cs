@@ -21,9 +21,13 @@ namespace EntityLayer.Concrete
         // Ödeme türü; false => nakit, true => kredi kartı
         public bool PaymentMethod { get; set; }
 
-        // Faturanın ait olduğu masanın ID'si
+        // Faturanın ait olduğu masanın ID'si, eğer paket servis ise 0(sıfır)
         public int TableID { get; set; }
         public virtual Table Table { get; set; }
+
+        // Eğer paket servis ise ID, değil ise 0(sıfır)
+        public int TakeAwayID { get; set; }
+        public virtual TakeAway TakeAway { get; set; }
 
         public ICollection<Order> Orders { get; set; }
     }

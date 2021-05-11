@@ -58,6 +58,7 @@
     <Compile Include="Concrete\Receipt.cs" />
     <Compile Include="Concrete\Reservation.cs" />
     <Compile Include="Concrete\Table.cs" />
+    <Compile Include="Concrete\TakeAway.cs" />
     <Compile Include="Concrete\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

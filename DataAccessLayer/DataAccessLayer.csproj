@@ -59,6 +59,7 @@
     <Compile Include="Abstract\IRepository.cs" />
     <Compile Include="Abstract\IReservation.cs" />
     <Compile Include="Abstract\ITable.cs" />
+    <Compile Include="Abstract\ITakeAway.cs" />
     <Compile Include="Abstract\IUser.cs" />
     <Compile Include="Concrete\Context.cs" />
     <Compile Include="Concrete\Repositories\GenericRepository.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="EntityFramework\DalEfReceipt.cs" />
     <Compile Include="EntityFramework\DalEfReservation.cs" />
     <Compile Include="EntityFramework\DalEfTable.cs" />
+    <Compile Include="EntityFramework\DalEfTakeAway.cs" />
     <Compile Include="EntityFramework\DalEfUser.cs" />
     <Compile Include="Migrations\202105091655017_firstRun.cs" />
     <Compile Include="Migrations\202105091655017_firstRun.designer.cs">

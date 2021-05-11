@@ -29,5 +29,10 @@ namespace BusinessLayer.Concrete
         {
             _category.Insert(p);
         }
+
+        public Category GetByID(int id)
+        {
+            return _category.Get(x => x.CategoryID == id);
+        }
     }
 }
