@@ -21,6 +21,9 @@ namespace EntityLayer.Concrete
         // Ödeme türü; false => nakit, true => kredi kartı
         public bool PaymentMethod { get; set; }
 
+        // Fatura oluşturulma tarihi ve zamanı
+        public DateTime ReceiptDate { get; set; }
+
         // Faturanın ait olduğu masanın ID'si, eğer paket servis ise 0(sıfır)
         public int TableID { get; set; }
         public virtual Table Table { get; set; }

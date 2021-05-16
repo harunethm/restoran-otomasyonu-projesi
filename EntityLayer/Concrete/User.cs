@@ -36,6 +36,9 @@ namespace EntityLayer.Concrete
         // İş başında olup olmadığı
         public bool IsOnline { get; set; }
 
+        // Kullanıcı hala çalışıyor mu; 1 => aktif, 0 => pasif
+        public bool Status { get; set; }
+
         // Aldığı siparişler
         public ICollection<Order> Orders { get; set; }
     }

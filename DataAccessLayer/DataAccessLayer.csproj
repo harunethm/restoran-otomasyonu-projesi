@@ -76,6 +76,14 @@
     <Compile Include="Migrations\202105091655017_firstRun.designer.cs">
       <DependentUpon>202105091655017_firstRun.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202105161028210_addedStatusToUser.cs" />
+    <Compile Include="Migrations\202105161028210_addedStatusToUser.designer.cs">
+      <DependentUpon>202105161028210_addedStatusToUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105161036472_addedStatusToUser1.cs" />
+    <Compile Include="Migrations\202105161036472_addedStatusToUser1.designer.cs">
+      <DependentUpon>202105161036472_addedStatusToUser1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -92,6 +100,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202105091655017_firstRun.resx">
       <DependentUpon>202105091655017_firstRun.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105161028210_addedStatusToUser.resx">
+      <DependentUpon>202105161028210_addedStatusToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105161036472_addedStatusToUser1.resx">
+      <DependentUpon>202105161036472_addedStatusToUser1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
