@@ -1,0 +1,35 @@
+﻿@using EntityLayer.Concrete
+
+@{
+    ViewBag.Title = "Menu";
+    List<Category> categories = ViewBag.categories;
+    List<Product> products = ViewBag.products;
+    Layout = "~/Views/Shared/_LogInLayout.cshtml";
+}
+
+<div class="justify-content-center">
+    <div class="col-lg-6 col-md-8 container container-fluid">
+        <br />
+        @foreach (var category in categories)
+        {
+            <br />
+            <h4 class="text-center">@category.CategoryName</h4>
+            <table class="table small">
+                <tr>
+                    <th>Ürün Adı</th>
+                    <th class="text-end">Fiyatı</th>
+                </tr>
+                @foreach (var product in products)
+                {
+                    if (product.CategoryID == category.CategoryID)
+                    {
+                        <tr>
+                            <td class="text-start col-4">@product.Name</td>
+                            <td class="text-end col-4">@product.Price TL</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+    </div>
+</div>

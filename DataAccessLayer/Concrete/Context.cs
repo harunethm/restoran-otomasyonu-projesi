@@ -17,6 +17,7 @@ namespace DataAccessLayer.Concrete
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Table> Tables { get; set; }
+        public DbSet<TakeAway> TakeAways { get; set; }
         public DbSet<User> Users { get; set; }
 
     }
