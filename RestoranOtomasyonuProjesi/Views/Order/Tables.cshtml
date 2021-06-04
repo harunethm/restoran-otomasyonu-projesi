@@ -1,0 +1,117 @@
+﻿@using EntityLayer.Concrete
+
+@{
+    ViewBag.Title = "Tables";
+    List<Table> tables = ViewBag.tables;
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<form method="post" action="@Url.Action("Tables", "Order")">
+    <br />
+    <br />
+    <div class="justify-content-center">
+        <div class="col-lg-6 col-md-8 container container-fluid">
+            <br />
+
+            <table class="table table-hover" id="table">
+                <thead>
+                    <tr>
+                        <th class="text-start col-4">Masa Numarası</th>
+                        <th class="text-center col-4">Durumu</th>
+                        <th class="text-end col-4">Sipariş Al</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var table in tables)
+                    {
+                        <tr id="tr" data-status="@table.Status" data-id="@table.TableID">
+
+                            <td class="text-start col-4">
+                                <a data-bs-toggle="modal" data-bs-target="#sepet">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                Masa - @table.TableID
+                            </td>
+
+                            <td class="text-center col-4"><span class="badge rounded-pill @(table.Status == 0 ? "bg-success" : table.Status == 1 ? "bg-danger" : "bg-warning") ">@(table.Status == 0 ? "Boş" : table.Status == 1 ? "Dolu" : "Rezerve")</span></td>
+
+                            <!--geçici olarak var, silinecek-->
+                            <td>
+                                <button class="btn btn-outline-primary float-end" type="submit" name="id" value="@table.TableID">
+                                    <i class="fa fa-arrow-circle-right"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+</form>
+
+<footer class="card-footer mt-auto position-sticky">
+    <div class="container container-fluid text-center">
+        <label>&copy; Harun Ethem ÇALIŞ &bull; @DateTime.Now.Year</label>
+    </div>
+</footer>
+
+<!--#region Modal Sepet-->
+<div class="modal fade" id="sepet" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Siparişler</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th class="text-start col-4">Ürün Adı</th>
+                        <th class="text-center col-4">Sipariş Adedi</th>
+                        <th class="text-end col-4">Birim Fiyatı</th>
+                    </tr>
+                    @*<tr>
+                            @foreach (var product in sepettekiler)
+                            {
+                                <td class="text-start col-4">@product.Name</td>
+                                <td class="text-center col-4">@product.Amount</td>
+                                <td class="text-end col-4">@product.Price TL</td>
+                            }
+                        </tr>*@
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <h5 class="me-auto">
+                    Toplam Tutar :
+                    <span class="badge bg-success">150 TL</span>
+                </h5>
+                <button class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Kapat</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table #tr').click(function () {
+            console.log(" ");
+            console.log("id = " + $(this).data("id"));
+            console.log("status = " + $(this).data("status"));
+            //$(location).prop('href', '@Url.Action("Orders", "Order")')
+        });
+    });
+</script>
+
+<style>
+    #table #tr {
+        cursor: pointer;
+    }
+</style>

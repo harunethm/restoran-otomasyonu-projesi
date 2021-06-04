@@ -4,8 +4,10 @@
     ViewBag.Title = "Menu";
     List<Category> categories = ViewBag.categories;
     List<Product> products = ViewBag.products;
-    Layout = "~/Views/Shared/_LogInLayout.cshtml";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
+
+<br />
 
 <div class="justify-content-center">
     <div class="col-lg-6 col-md-8 container container-fluid">
@@ -33,3 +35,9 @@
         }
     </div>
 </div>
+
+<footer class="card-footer m-auto position-sticky">
+    <div class="container container-fluid text-center">
+        <label>&copy; Harun Ethem ÇALIŞ &bull; @DateTime.Now.Year</label>
+    </div>
+</footer>

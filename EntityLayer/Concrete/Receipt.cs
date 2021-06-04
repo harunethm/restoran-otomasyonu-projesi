@@ -18,19 +18,18 @@ namespace EntityLayer.Concrete
         // Yapılan indirim
         public double Discount { get; set; }
 
-        // Ödeme türü; false => nakit, true => kredi kartı
-        public bool PaymentMethod { get; set; }
+        // Ödeme türü; ödenmemiş ise => 0, nakit ödenmiş ise => 1, kredi kartı ile ödenmiş ise => 2
+        public int PaymentMethod { get; set; }
 
         // Fatura oluşturulma tarihi ve zamanı
         public DateTime ReceiptDate { get; set; }
 
-        // Faturanın ait olduğu masanın ID'si, eğer paket servis ise 0(sıfır)
-        public int TableID { get; set; }
-        public virtual Table Table { get; set; }
+        // Fatura güncel mi eski mi (ödenmiş mi ödenmemiş mi)
+        public bool Status { get; set; }
 
-        // Eğer paket servis ise ID, değil ise 0(sıfır)
-        public int TakeAwayID { get; set; }
-        public virtual TakeAway TakeAway { get; set; }
+        public ICollection<Table> Tables { get; set; }
+
+        public ICollection<TakeAway> TakeAways { get; set; }
 
         public ICollection<Order> Orders { get; set; }
     }

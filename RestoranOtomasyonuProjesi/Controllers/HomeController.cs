@@ -10,16 +10,10 @@ namespace RestoranOtomasyonuProjesi.Controllers
 {
     public class HomeController : Controller
     {
-        CategoryManager cm = new CategoryManager(new DalEfCategory());
-        ProductManager pm = new ProductManager(new DalEfProduct());
-        public ActionResult Tables()
-        {
-            return View();
-        }
-        public ActionResult TakeAway()
-        {
-            return View();
-        }
+        private readonly CategoryManager cm = new CategoryManager(new DalEfCategory());
+        private readonly ProductManager pm = new ProductManager(new DalEfProduct());
+
+        [HttpGet]
         public ActionResult Menu()
         {
             ViewBag.categories = cm.ListAll();

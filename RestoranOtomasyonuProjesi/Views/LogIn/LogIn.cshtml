@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "LogIn";
+    List<EntityLayer.Concrete.User> users = ViewBag.users;
+    EntityLayer.Concrete.User u = ViewBag.u != null ? ViewBag.u : null;
+    Layout = "~/Views/Shared/_LogInLayout.cshtml";
+}
+
+<form action="@Url.Action("LogIn", "LogIn")" method="post" role="button">
+    <div class="row justify-content-center text-center">
+        <div class="col-5">
+            <br />
+            <br />
+            <h3 class="mb-3">Giriş Yap</h3>
+            <br />
+            <div class="input-group">
+                <select class="form-select" name="userID" id="selector">
+                    <option>Kullanıcı seçiniz.</option>
+                    @foreach (var user in users)
+                    {
+                        <option value="@user.UserID" @(u != null ? (u.UserID == user.UserID ? "selected" : "") : "")>@user.Name @user.Surname</option>
+                    }
+                </select>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="mt-2">
+                <input type="password" class="form-control" name="Password" placeholder="Şifrenizi giriniz." value=@(u != null ? u.Password : "")>
+            </div>
+            <br />
+            <button class="w-50 btn btn-sm btn-primary mt-3" type="submit">Giriş Yap</button>
+            <br />
+            <a href="@Url.Action("ForgotPassword", "LogIn")">Şifremi unuttum</a>
+            <br />
+            <br />
+        </div>
+    </div>
+</form>
+
+@section button{
+    <a class="float-end" href="@Url.Action("Entry", "LogIn")">
+        Geri Dön
+        <i class="fas fa-door-closed"></i>
+    </a>
+}
+@section outside{
+    <style>
+        .absolute-center {
+            width: 100%;
+            height: 300px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            text-align: center !important;
+        }
+    </style>
+}

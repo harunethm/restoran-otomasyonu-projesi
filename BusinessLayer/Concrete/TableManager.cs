@@ -29,5 +29,10 @@ namespace BusinessLayer.Concrete
         {
             _table.Insert(p);
         }
+
+        public Table GetByID(int p)
+        {
+            return _table.Get(x => x.TableID == p);
+        }
     }
 }

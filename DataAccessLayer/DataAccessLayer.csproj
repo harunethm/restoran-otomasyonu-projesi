@@ -72,17 +72,9 @@
     <Compile Include="EntityFramework\DalEfTable.cs" />
     <Compile Include="EntityFramework\DalEfTakeAway.cs" />
     <Compile Include="EntityFramework\DalEfUser.cs" />
-    <Compile Include="Migrations\202105091655017_firstRun.cs" />
-    <Compile Include="Migrations\202105091655017_firstRun.designer.cs">
-      <DependentUpon>202105091655017_firstRun.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202105161028210_addedStatusToUser.cs" />
-    <Compile Include="Migrations\202105161028210_addedStatusToUser.designer.cs">
-      <DependentUpon>202105161028210_addedStatusToUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202105161036472_addedStatusToUser1.cs" />
-    <Compile Include="Migrations\202105161036472_addedStatusToUser1.designer.cs">
-      <DependentUpon>202105161036472_addedStatusToUser1.cs</DependentUpon>
+    <Compile Include="Migrations\202105302054510_mig.cs" />
+    <Compile Include="Migrations\202105302054510_mig.designer.cs">
+      <DependentUpon>202105302054510_mig.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,17 +90,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202105091655017_firstRun.resx">
-      <DependentUpon>202105091655017_firstRun.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202105161028210_addedStatusToUser.resx">
-      <DependentUpon>202105161028210_addedStatusToUser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202105161036472_addedStatusToUser1.resx">
-      <DependentUpon>202105161036472_addedStatusToUser1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202105302054510_mig.resx">
+      <DependentUpon>202105302054510_mig.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

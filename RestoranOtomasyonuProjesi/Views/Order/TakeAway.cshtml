@@ -1,0 +1,176 @@
+﻿@using EntityLayer.Concrete
+@{
+    ViewBag.Title = "TakeAway";
+    List<Category> categories = ViewBag.categories;
+    List<Product> products = ViewBag.products;
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+@*<form method="post" action="@Url.Action("TakeAway","Order")">*@
+    <div class="justify-content-center">
+        <div class="col-lg-6 col-md-8 container container-fluid">
+            <!--#region menü-->
+            @if (categories != null && products != null)
+            {
+                foreach (var category in categories)
+                {
+                    <br />
+                    <h4 class="text-center" id="@category.CategoryName">@category.CategoryName</h4>
+                    <table class="table small">
+                        <tr>
+                            <th class="text-center">Sipariş Sil</th>
+                            <th class="text-center">Ürün Adı</th>
+                            <th class="text-center">Adet Fiyatı</th>
+                            <th class="text-center">Sipariş Adedi</th>
+                            <th class="text-center">Sipariş Ver</th>
+                        </tr>
+                        @foreach (var product in products)
+                        {
+                            if (product.CategoryID == category.CategoryID)
+                            {
+                                <tr>
+                                    <td class="col-1">
+                                        <button class="btn btn-danger float-start" name="siparisAzalt" id="btn_siparisAzalt_@product.ProductID" value="@product.ProductID">
+                                            -
+                                        </button>
+                                    </td>
+                                    <td class="text-center col-4">@product.Name</td>
+                                    <td class="text-center col-3">@product.Price TL</td>
+                                    <td class="text-center col-3">
+                                        <input type="number" class="form-control col-1 text-center" value="0" id="orderAmount_@product.ProductID" />
+                                        <!--masaya ait sparişler içerisinden bu ürünün sipariş adedini getir-->
+                                    </td>
+                                    <td class="col-1">
+                                        <button class="btn btn-success float-end" name="siparisArttir" id="btn_siparisArttir_@product.ProductID" value="@product.ProductID">
+                                            +
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                }
+            }
+            <!--#endregion-->
+        </div>
+        <div class="clearfix"></div>
+        <br />
+        <br />
+        <!--#region navbar-->
+        <nav class="navbar navbar-light fixed-bottom bg-dark">
+
+            <div class="col-lg-6 col-md-8  container container-fluid">
+                <!--sepeti görüntüle => popup, siparişi onayla, siparişi iptal et-->
+                <button class="btn btn-outline-danger" name="btn_iptal">
+                    <i class="fas fa-times"></i>
+                    İptal
+                </button>
+
+                <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#sepet" name="btn_sepet">
+                    <i class="fas fa-shopping-cart"></i>
+                    Sepet
+                </button>
+
+                <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#adress" name="btn_adress">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Adres
+                </button>
+
+                <button class="btn btn-outline-success" name="btn_onayla">
+                    <i class="fas fa-check"></i>
+                    Onayla
+                </button>
+            </div>
+        </nav>
+        <!--#endregion-->
+    </div>
+@*</form>*@
+
+<!--#region Modal Sepet-->
+<div class="modal fade" id="sepet" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Sepet</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th class="text-start col-4">ürün Adı</th>
+                        <th class="text-center col-4">Sipariş Adedi</th>
+                        <th class="text-end col-4">Birim Fiyatı</th>
+                    </tr>
+                    @*<tr>
+                            @foreach (var product in sepettekiler)
+                            {
+                                <td class="text-start col-4">@product.Name</td>
+                                <td class="text-center col-4">@product.Amount</td>
+                                <td class="text-end col-4">@product.Price TL</td>
+                            }
+                        </tr>*@
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <h5 class="me-auto">
+                    Toplam Fiyat :
+                    <span class="badge bg-success">150 TL</span>
+                </h5>
+                <button class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Kapat</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+
+<!--#region Modal Adres-->
+<div class="modal fade" id="adress" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Adres</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-4">Ad - Soyad</span>
+                    <input type="text" class="form-control" placeholder="Ad Soyad">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Tel No</span>
+                    <input type="tel" class="form-control" placeholder="5xxxxxxxxx" maxlength="10">
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Adres</span>
+                    <input type="text" class="form-control" placeholder="Adres" maxlength="100">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Kapat</button>
+                <button class="btn btn-sm btn-outline-success" data-bs-dismiss="modal">Kaydet</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+
+
+
+@*<script type="text/javascript">
+        $('document').ready(function(){
+            $('#siparisArttir').on('click', function () {
+                $('#orderAmount').val() = parseInt($('#orderAmount').val().toString()) + 1;
+            });
+            $('#siparisAzalt').on('click', function () {
+                $('#orderAmount').val() = parseInt($('#orderAmount').val().toString()) - 1;
+            });
+        });
+    </script>*@

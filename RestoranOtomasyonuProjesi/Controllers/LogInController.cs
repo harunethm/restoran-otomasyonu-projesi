@@ -3,11 +3,7 @@ using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
-//using System.Globalization;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace RestoranOtomasyonuProjesi.Controllers
@@ -18,7 +14,8 @@ namespace RestoranOtomasyonuProjesi.Controllers
         private readonly ProductManager pm = new ProductManager(new DalEfProduct());
         private readonly UserManager um = new UserManager(new DalEfUser());
 
-        public ActionResult MainPage()
+        [HttpGet]
+        public ActionResult Entry()
         {
             ViewBag.categories = cm.ListAll();
             ViewBag.products = pm.ListAll();
@@ -26,25 +23,42 @@ namespace RestoranOtomasyonuProjesi.Controllers
         }
 
         [HttpGet]
-        public ActionResult LogInPage()
+        public ActionResult LogIn()
         {
-            ViewBag.users = um.ListAll();
+            List<User> users = um.ListAll();
+            ViewBag.users = users;
             return View();
         }
 
         [HttpPost]
-        public ActionResult LogInPage(User user)
+        public ActionResult LogIn(User u)
         {
-            UserValidator userValidator = new UserValidator();
-            ValidationResult validationResult = userValidator.Validate(user);
-            if (validationResult.IsValid)
+            u.Password = u.Password == null ? "" : u.Password;
+            User user = um.GetByID(u.UserID);
+            List<User> users = um.ListAll();
+            ViewBag.users = users;
+            try
             {
-                return RedirectToAction("Menu", "Home");
+                if (user != null && u.Password.Equals(user.Password))
+                {
+                    return user.AuthorityLevel == 2 ? RedirectToAction("Istatistik", "Admin") : RedirectToAction("Menu", "Home");
+                }
+                else
+                {
+                    ViewBag.u = u;
+                    return View();
+                }
             }
-            else
+            catch
             {
                 return View();
             }
+        }
+
+
+        public ActionResult LogOut()
+        {
+            return RedirectToAction("Entry", "LogIn");
         }
     }
 }

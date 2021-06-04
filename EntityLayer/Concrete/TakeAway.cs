@@ -28,6 +28,7 @@ namespace EntityLayer.Concrete
         public int Status { get; set; }
 
         // Siparişler
-        ICollection<Receipt> Receipts { get; set; }
+        public int ReceiptID { get; set; }
+        public virtual Receipt Receipt { get; set; }
     }
 }

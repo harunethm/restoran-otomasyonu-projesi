@@ -19,6 +19,7 @@ namespace EntityLayer.Concrete
         public DateTime? OpeningDate { get; set; }
 
         // Siparişler
-        public ICollection<Receipt> Receipts { get; set; }
+        public int? ReceiptID { get; set; }
+        public virtual Receipt Receipt { get; set; }
     }
 }

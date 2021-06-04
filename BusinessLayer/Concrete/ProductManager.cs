@@ -30,5 +30,14 @@ namespace BusinessLayer.Concrete
             _product.Insert(p);
         }
 
+        public Product GetByID(int p)
+        {
+            return _product.Get(x => x.CategoryID == p);
+        }
+
+        public List<Product> GetByCategoryID(int p)
+        {
+            return _product.List(x => x.CategoryID == p);
+        }
     }
 }
