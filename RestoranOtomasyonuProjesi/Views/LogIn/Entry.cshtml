@@ -12,24 +12,27 @@
         <br />
         @foreach (var category in categories)
         {
-            <br />
-            <h4 class="text-center">@category.CategoryName</h4>
-            <table class="table small">
-                <tr>
-                    <th>Ürün Adı</th>
-                    <th class="text-end">Fiyatı</th>
-                </tr>
-                @foreach (var product in products)
-                {
-                    if (product.CategoryID == category.CategoryID)
+            if (category.Status)
+            {
+                <br />
+                <h4 class="text-center">@category.CategoryName</h4>
+                <table class="table small">
+                    <tr>
+                        <th>Ürün Adı</th>
+                        <th class="text-end">Fiyatı</th>
+                    </tr>
+                    @foreach (var product in products)
                     {
-                        <tr>
-                            <td class="text-start col-4">@product.Name</td>
-                            <td class="text-end col-4">@product.Price TL</td>
-                        </tr>
+                        if (product.Status && product.CategoryID == category.CategoryID)
+                        {
+                            <tr>
+                                <td class="text-start col-4">@product.Name</td>
+                                <td class="text-end col-4">@product.Price TL</td>
+                            </tr>
+                        }
                     }
-                }
-            </table>
+                </table>
+            }
         }
     </div>
 </div>

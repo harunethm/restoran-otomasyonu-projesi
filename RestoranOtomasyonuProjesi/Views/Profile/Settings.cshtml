@@ -1,8 +1,50 @@
-﻿
+﻿@using EntityLayer.Concrete
+
 @{
     ViewBag.Title = "Settings";
+    User user = ViewBag.user;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
+<form action="@Url.Action("Settings", "Profile")" method="post">
+    <div class="container container-fluid mt-3">
+        <div class="input-group mb-2">
+            <span class="input-group-text col-3">İsim</span>
+            <input type="text" class="form-control" placeholder="İsim" name="Name" id="Name" value="@user.Name">
+        </div>
 
-<h2>Settings</h2>
+        <div class="input-group mb-2">
+            <span class="input-group-text col-3">Soyisim</span>
+            <input type="text" class="form-control" placeholder="Soyisim" name="Surname" id="Surname" value="@user.Surname">
+        </div>
 
+        <div class="input-group mb-2">
+            <span class="input-group-text col-3">Tel No</span>
+            <input type="tel" class="form-control" placeholder="5xxxxxxxxx" maxlength="10" name="PhoneNumber" id="PhoneNumber" value="@user.PhoneNumber">
+        </div>
+
+        <div class="input-group mb-2" hidden>
+            <input class="form-control" name="AuthorityLevel" id="AuthorityLevel" value="@user.AuthorityLevel">
+        </div>
+
+        <div class="input-group mb-2">
+            <span class="input-group-text col-3">Şifre</span>
+            <input type="password" class="form-control" placeholder="Şifre" name="Password" id="Password" value="@user.Password">
+            <span class="btn btn-secondary" id="passwordVisual"><i class="fas fa-eye"></i></span>
+        </div>
+
+        <button disabled class="btn btn-primary float-end" id="btnApplyChanges">
+            Değişiklikleri Kaydet
+        </button>
+    </div>
+</form>
+<script type="text/javascript">
+    $('document').ready(function () {
+        $('input').change(function () {
+            $('#btnApplyChanges').removeAttr('disabled');
+        });
+
+        $('#passwordVisual').click(function () {
+            $('#Password').attr("type", $('#Password').attr("type") == "password" ? "text" : "password");
+        });
+    });
+</script>

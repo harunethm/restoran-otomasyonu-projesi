@@ -34,5 +34,11 @@ namespace BusinessLayer.Concrete
         {
             return _category.Get(x => x.CategoryID == id);
         }
+
+        public void Delete(Category p)
+        {
+            p.Status = false;
+            _category.Update(p);
+        }
     }
 }

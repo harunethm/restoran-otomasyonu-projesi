@@ -3,6 +3,7 @@ using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 
@@ -31,27 +32,20 @@ namespace RestoranOtomasyonuProjesi.Controllers
         }
 
         [HttpPost]
-        public ActionResult LogIn(User u)
+        public ActionResult LogIn(string phoneNumber, string password)
         {
-            u.Password = u.Password == null ? "" : u.Password;
-            User user = um.GetByID(u.UserID);
-            List<User> users = um.ListAll();
-            ViewBag.users = users;
+            User user = um.GetByPhoneNumber(phoneNumber);
             try
             {
-                if (user != null && u.Password.Equals(user.Password))
-                {
-                    return user.AuthorityLevel == 2 ? RedirectToAction("Istatistik", "Admin") : RedirectToAction("Menu", "Home");
-                }
+                if (user != null && password != null && user.Password.Equals(password))
+                    return user.AuthorityLevel == 2 ? RedirectToAction("Statistics", "Admin") : RedirectToAction("Menu", "Home");
                 else
-                {
-                    ViewBag.u = u;
-                    return View();
-                }
+                    return RedirectToAction("LogIn");
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                ViewBag.exception = e.Message;
+                return RedirectToAction("LogIn");
             }
         }
 

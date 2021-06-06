@@ -7,12 +7,9 @@
     double totalPrice = ViewBag.totalPrice;
 }
 
-<br />
-<br />
-<br />
-<div class="container container-fluid">
-    <div class="row">
-        <div class="col-5">
+
+    <div class="row p-3">
+        <div class="col-5 pe-2">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -33,8 +30,8 @@
                         for (int i = 0; i < order.Amount; i++)
                         {
                             <tr>
-                                <td data-price="@order.Product.Price">
-                                    <input type="checkbox" class="form-check cb_orders" />
+                                <td>
+                                    <input type="checkbox" class="form-check cb_orders" data-price="@order.Product.Price"/>
                                 </td>
                                 <td class="text-center">@order.Product.Name</td>
                                 <td class="text-end">@order.Product.Price</td>
@@ -44,11 +41,7 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="col-1">
-        </div>
-
-        <div class="col-6">
+        <div class="col-7 ps-2">
             <div class="form-group">
                 <label for="totalPrice">Seçilen Ürünlerin Toplam Tutarı:</label>
                 <div class="input-group">
@@ -75,11 +68,14 @@
                 <input type="radio" id="rb_KrediKarti" name="rb_Payment" class="form-check-input">
                 <label class="form-check-label" for="rb_KrediKarti">Kredi Kartı</label>
             </div>
+            <div class="form-check form-check-inline">
+                <input type="radio" id="rb_Serve" name="rb_Payment" class="form-check-input">
+                <label class="form-check-label" for="rb_Serve">İkram Et</label>
+            </div>
             <span class="badge bg-success" id="bg_odenecekTutar"></span>
             <button class="btn btn-primary float-end">Öde</button>
         </div>
     </div>
-</div>
 
 <script type="text/javascript">
 
@@ -97,12 +93,19 @@
     });
 
     $('.cb_orders').change(function () {
-        var price = this.parentElement.attributes["data-price"].value;
-
+        var price = this.attributes["data-price"].value;
+        console.log(this);
+        console.log(price);
         if (this.checked)
             $('#totalPrice').val(parseInt($('#totalPrice').val()) + parseInt(price));
         else
             $('#totalPrice').val(parseInt($('#totalPrice').val()) - parseInt(price));
+    });
+
+    $("tr").click(function () {
+        var checkbox = $(this).find("input[type='checkbox']");
+        checkbox.attr('checked', !checkbox.attr('checked'));
+        $(checkbox).trigger("change");
     });
 
 </script>

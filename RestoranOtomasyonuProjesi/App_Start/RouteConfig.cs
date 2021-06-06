@@ -16,7 +16,7 @@ namespace RestoranOtomasyonuProjesi
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Order", action = "Tables", id = UrlParameter.Optional }
+                defaults: new { controller = "LogIn", action = "Entry", id = UrlParameter.Optional }
             );
         }
     }

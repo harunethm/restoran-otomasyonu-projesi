@@ -3,13 +3,13 @@
 @{
     ViewBag.Title = "Tables";
     List<Table> tables = ViewBag.tables;
+    //List<Receipt> receipts = ViewBag.receipts;
+    //List<Order> orders = ViewBag.orders;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <form method="post" action="@Url.Action("Tables", "Order")">
-    <br />
-    <br />
     <div class="justify-content-center">
         <div class="col-lg-6 col-md-8 container container-fluid">
             <br />
@@ -28,10 +28,10 @@
                         <tr id="tr" data-status="@table.Status" data-id="@table.TableID">
 
                             <td class="text-start col-4">
-                                <a data-bs-toggle="modal" data-bs-target="#sepet">
+                                <a class="tableInfo" data-bs-toggle="modal" data-bs-target="#sepet" data-tableID="@table.TableID">
                                     <i class="fas fa-info-circle"></i>
                                 </a>
-                                Masa - @table.TableID
+                                Masa-@table.TableID
                             </td>
 
                             <td class="text-center col-4"><span class="badge rounded-pill @(table.Status == 0 ? "bg-success" : table.Status == 1 ? "bg-danger" : "bg-warning") ">@(table.Status == 0 ? "Boş" : table.Status == 1 ? "Dolu" : "Rezerve")</span></td>
@@ -101,11 +101,14 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#table #tr').click(function () {
+        $('#table #tr').click(function () { //masaya tıklama olayı
             console.log(" ");
             console.log("id = " + $(this).data("id"));
             console.log("status = " + $(this).data("status"));
             //$(location).prop('href', '@Url.Action("Orders", "Order")')
+        });
+
+        $('.tableInfo').click(function (e) {
         });
     });
 </script>

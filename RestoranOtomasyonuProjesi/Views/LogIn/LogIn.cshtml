@@ -14,13 +14,14 @@
             <h3 class="mb-3">Giriş Yap</h3>
             <br />
             <div class="input-group">
-                <select class="form-select" name="userID" id="selector">
+                @*<select class="form-select" name="userID" id="selector">
                     <option>Kullanıcı seçiniz.</option>
                     @foreach (var user in users)
                     {
                         <option value="@user.UserID" @(u != null ? (u.UserID == user.UserID ? "selected" : "") : "")>@user.Name @user.Surname</option>
                     }
-                </select>
+                </select>*@
+                <input type="tel" name="PhoneNumber" value="" placeholder="Telefon Numarası" />
             </div>
 
             <div class="clearfix"></div>

@@ -1,0 +1,71 @@
+﻿@using EntityLayer.Concrete
+@{
+    ViewBag.Title = "CashRegister";
+    List<CashRegister> cashRegisters = ViewBag.cashRegisters;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<span class="fs-2">Kategoriler</span>
+<button class="btn btn-success float-end">
+    <i class="fas fa-flag" id="btn_icon"></i>
+    Günü Başlat
+</button>
+
+<table class="table table-bordered">
+    <thead>
+        <tr class="text-center">
+            <th class="col-1">Tarih</th>
+            <th>Kazanç</th>
+            <th>İkramlar</th>
+            <th>İndirimler</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (cashRegisters != null && cashRegisters.Count > 0)
+        {
+            foreach (var cashRegister in cashRegisters)
+            {
+                if (cashRegister.Status)
+                {
+                    <tr class="text-center">
+                        <td>@cashRegister.DateTime.ToShortDateString()</td>
+                        <td>@cashRegister.AmountEarned TL</td>
+                        <td>@cashRegister.AmountServed TL</td>
+                        <td>@cashRegister.AmountDiscount TL</td>
+                        <td>
+                            <span class="badge bg-success">Aktif</span>
+                        </td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td colspan="5">
+                    <br />
+                </td>
+            </tr>
+            foreach (var cashRegister in cashRegisters)
+            {
+                if (!cashRegister.Status)
+                {
+                    <tr class="text-center">
+                        <td>@cashRegister.DateTime.ToShortDateString()</td>
+                        <td>@cashRegister.AmountEarned TL</td>
+                        <td>@cashRegister.AmountServed TL</td>
+                        <td>@cashRegister.AmountDiscount TL</td>
+                        <td>
+                            <span class="badge bg-danger">Deaktif</span>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">Kasa bulunamadı...</td>
+            </tr>
+        }
+    </tbody>
+</table>

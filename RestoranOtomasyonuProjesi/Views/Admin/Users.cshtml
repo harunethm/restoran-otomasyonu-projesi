@@ -1,0 +1,197 @@
+﻿@using EntityLayer.Concrete
+@{
+    ViewBag.Title = "Users";
+    List<User> users = ViewBag.users;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form action="@Url.Action("Users", "Admin")" method="post">
+    <div style="min-width:610px">
+        <span class="fs-2">Kullanıcılar</span>
+        <button class="btn btn-success float-end" type="button" data-bs-toggle="modal" data-bs-target="#modalAddUser" data-type="add">Kullanıcı Ekle</button>
+
+
+        <table class="table table-bordered">
+            <thead>
+                <tr class="text-center">
+                    <th>İsim Soyisim</th>
+                    <th>Telefon Numarası</th>
+                    <th>Kayıt Tarihi</th>
+                    <th>Son Giriş Tarihi</th>
+                    <th>Son Şifre Değiştirme Tarihi</th>
+                    <th>Yetki Düzeyi</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (users != null && users.Count > 0)
+                {
+                    foreach (var user in users)
+                    {
+                        if (user.Status)
+                        {
+                            <tr class="text-center" >
+                                <td>@user.Name @user.Surname</td>
+                                <td>@user.PhoneNumber</td>
+                                <td>@user.RegisterDate.ToShortDateString()</td>
+                                <td>@user.LastLogin.ToShortDateString()</td>
+                                <td>@user.LastPasswordChange.ToShortDateString()</td>
+                                <td>@user.AuthorityLevel</td>
+                                <td>
+                                    <button class="btn btn-warning" name="btnEdit" value="@user.UserID" type="button" data-bs-toggle="modal" data-bs-target="#modalAddUser"
+                                            data-type="edit"
+                                            data-name="@user.Name"
+                                            data-surname="@user.Surname"
+                                            data-phone="@user.PhoneNumber"
+                                            data-authority="@user.AuthorityLevel"
+                                            data-password="@user.Password" >
+                                        <i class="fas fa-user-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" name="btnDelete" value="@user.UserID" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                    <tr>
+                        <td>
+                            <br />
+                        </td>
+                    </tr>
+
+                    foreach (var user in users)
+                    {
+                        if (!user.Status)
+                        {
+                            <tr class="text-center">
+                                <td>@user.Name @user.Surname</td>
+                                <td>@user.PhoneNumber</td>
+                                <td>@user.RegisterDate.ToShortDateString()</td>
+                                <td>@user.LastLogin.ToShortDateString()</td>
+                                <td>@user.LastPasswordChange.ToShortDateString()</td>
+                                <td>@user.AuthorityLevel</td>
+                                <td>
+                                    <button class="btn btn-success" name="btnActivate" value="@user.UserID">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">Kullanıcı bulunamadı...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<!--#region emin misiniz-->
+<div class="modal fade" id="eminMisiniz">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Emin Misiniz?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Kullanıcıyı silmek istediğinize emin misiniz?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-bs-dismiss="modal" name="btn" value="deleteUser">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region kullanıcı ekle-->
+<div class="modal fade" id="modalAddUser">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Kullanıcı Ekle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">İsim</span>
+                    <input type="text" class="form-control" placeholder="İsim" name="Name" id="modalInputName">
+                </div>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Soyisim</span>
+                    <input type="text" class="form-control" placeholder="Soyisim" name="Surname" id="modalInputSurname">
+                </div>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Tel No</span>
+                    <input type="tel" class="form-control" placeholder="5xxxxxxxxx" maxlength="10" name="PhoneNumber" id="modalInputPhone">
+                </div>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Yetki Düzeyi</span>
+                    <select class="form-control form-select" name="AuthorityLevel" id="modalSelectAuthority">
+                        <option value="1" selected>Garson</option>
+                        <option value="0">Aşçı</option>
+                        <option value="2">Admin</option>
+                    </select>
+                </div>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Şifre</span>
+                    <input type="password" class="form-control" placeholder="Şifre" name="Password" id="modalInputPassword">
+                    <span class="btn btn-secondary" id="passwordVisual"><i class="fas fa-eye"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" name="btn" value="add">
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<script type="text/javascript">
+    $('document').ready(function () {
+        $('#modalAddUser').on('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+
+            var type = $(button).data('type');
+
+            if (type == "edit") {
+                $('#title').text("Kullanıcıyı Düzenle");
+                $('#modalInputName').val($(button).data('name'));
+                $('#modalInputSurname').val($(button).data('surname'));
+                $('#modalInputPhone').val($(button).data('phone'));
+                $("#modalSelectAuthority option[value = '" + $(button).data('authority') + "']").prop('selected', 'selected');
+                $('#modalInputPassword').val($(button).data('password'));
+                $('#modalInputPassword').attr("type", "password");
+            }
+            else {
+                $('#title').text("Kullanıcı Ekle");
+                $('#modalInputName').val("");
+                $('#modalInputSurname').val("");
+                $('#modalInputPhone').val("");
+                $('#modalSelectAuthority').val($("#modalSelectAuthority option:first").val());
+                $('#modalInputPassword').val("");
+                $('#modalInputPassword').attr("type", "password");
+            }
+        });
+
+        $('#passwordVisual').click(function () {
+            $('#modalInputPassword').attr("type", $('#modalInputPassword').attr("type") == "password" ? "text" : "password");
+        });
+    });
+    
+</script>

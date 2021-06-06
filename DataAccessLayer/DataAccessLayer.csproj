@@ -58,6 +58,7 @@
     <Compile Include="Abstract\IReceipt.cs" />
     <Compile Include="Abstract\IRepository.cs" />
     <Compile Include="Abstract\IReservation.cs" />
+    <Compile Include="Abstract\IStatistic.cs" />
     <Compile Include="Abstract\ITable.cs" />
     <Compile Include="Abstract\ITakeAway.cs" />
     <Compile Include="Abstract\IUser.cs" />
@@ -69,12 +70,17 @@
     <Compile Include="EntityFramework\DalEfProduct.cs" />
     <Compile Include="EntityFramework\DalEfReceipt.cs" />
     <Compile Include="EntityFramework\DalEfReservation.cs" />
+    <Compile Include="EntityFramework\DalEfStatistic.cs" />
     <Compile Include="EntityFramework\DalEfTable.cs" />
     <Compile Include="EntityFramework\DalEfTakeAway.cs" />
     <Compile Include="EntityFramework\DalEfUser.cs" />
     <Compile Include="Migrations\202105302054510_mig.cs" />
     <Compile Include="Migrations\202105302054510_mig.designer.cs">
       <DependentUpon>202105302054510_mig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106061909325_add_statClass.cs" />
+    <Compile Include="Migrations\202106061909325_add_statClass.designer.cs">
+      <DependentUpon>202106061909325_add_statClass.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,6 +98,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202105302054510_mig.resx">
       <DependentUpon>202105302054510_mig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106061909325_add_statClass.resx">
+      <DependentUpon>202106061909325_add_statClass.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

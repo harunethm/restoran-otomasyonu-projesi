@@ -60,6 +60,7 @@
     <Compile Include="Abstract\IProductService.cs" />
     <Compile Include="Abstract\IReceiptService.cs" />
     <Compile Include="Abstract\IReservationService.cs" />
+    <Compile Include="Abstract\IStatisticService.cs" />
     <Compile Include="Abstract\ITableService.cs" />
     <Compile Include="Abstract\ITakeAwayService.cs" />
     <Compile Include="Abstract\IUserService.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Concrete\ProductManager.cs" />
     <Compile Include="Concrete\ReceiptManager.cs" />
     <Compile Include="Concrete\ReservationManager.cs" />
+    <Compile Include="Concrete\StatisticManager.cs" />
     <Compile Include="Concrete\TableManager.cs" />
     <Compile Include="Concrete\TakeAwayManager.cs" />
     <Compile Include="Concrete\UserManager.cs" />

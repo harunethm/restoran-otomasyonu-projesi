@@ -1,0 +1,146 @@
+﻿@using EntityLayer.Concrete
+@{
+    ViewBag.Title = "Categories";
+    List<Category> categories = ViewBag.categories;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<span class="fs-2">Kategoriler</span>
+<button class="btn btn-success float-end" type="button" data-bs-toggle="modal" data-bs-target="#modalAddCategory" data-type="add">
+    <i class="fas fa-plus"></i>
+    Kategori Ekle
+</button>
+
+<table class="table table-bordered">
+    <thead>
+        <tr class="text-center">
+            <th class="col-1">ID</th>
+            <th>Kategori Adı</th>
+            <th>Durumu</th>
+            <th class="col-2">#</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (categories != null && categories.Count > 0)
+        {
+            foreach (var category in categories)
+            {
+                if (category.Status)
+                {
+                    <tr class="text-center">
+                        <td>@category.CategoryID</td>
+                        <td>@category.CategoryName</td>
+                        <td>
+                            <span class="badge bg-success">Aktif</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning" data-id="@category.CategoryID" data-name="@category.CategoryName" data-type="edit" type="button" data-bs-target="#modalAddCategory" data-bs-toggle="modal">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td colspan="4">
+                    <br />
+                </td>
+            </tr>
+            foreach (var category in categories)
+            {
+                if (!category.Status)
+                {
+                    <tr class="text-center">
+                        <td>@category.CategoryID</td>
+                        <td>@category.CategoryName</td>
+                        <td>
+                            <span class="badge bg-danger">Deaktif</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-success">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">Kategori bulunamadı...</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!--#region emin misiniz-->
+<div class="modal fade" id="eminMisiniz">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Emin Misiniz?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Kategoriyi deaktif etmek istediğinize emin misiniz?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-bs-dismiss="modal" name="btn" value="deleteCategory">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region kategori ekle-->
+<div class="modal fade" data-backdrop="static" id="modalAddCategory">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Kategori Ekle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input id="modalInputCategoryID" name="CategoryID" hidden />
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Kategori Adı</span>
+                    <input type="text" class="form-control" placeholder="Kategori Adı" name="CategoryName" id="modalInputCategoryName">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" name="btn" value="add">
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+
+<script type="text/javascript">
+    $('#modalAddCategory').on('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+
+        var type = $(button).data('type');
+
+        if (type == "edit") {
+            $('#title').text("Kategoriyi Düzenle");
+            $('#modalInputCategoryID').val($(button).data('id'));
+            $('#modalInputCategoryName').val($(button).data('name'));
+        }
+        else {
+            $('#title').text("Kategori Ekle");
+            $('#modalInputCategoryID').val('');
+            $('#modalInputCategoryName').val('');
+        }
+    });
+</script>

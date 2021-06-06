@@ -1,0 +1,203 @@
+﻿@using EntityLayer.Concrete
+@{
+    ViewBag.Title = "Ürünler";
+    List<Product> products = ViewBag.products;
+    List<Category> categories = ViewBag.categories;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form action="@Url.Action("Users", "Admin")" method="post">
+    <div style="min-width:610px">
+        <span class="fs-2">Ürünler</span>
+        <button class="btn btn-success float-end" type="button" data-bs-toggle="modal" data-bs-target="#modalAddProduct" data-type="add">
+            <i class="fas fa-plus"></i>
+            Ürün Ekle
+        </button>
+
+
+        <table class="table table-bordered">
+            <thead>
+                <tr class="text-center">
+                    <th class="col-1">Ürün ID</th>
+                    <th>Ürün Adı</th>
+                    <th>Kategori Adı</th>
+                    <th>Açıklama</th>
+                    <th class="col-1">Fiyatı</th>
+                    <th class="col-1">Durumu</th>
+                    <th class="col-2">#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (products != null && products.Count > 0)
+                {
+                    foreach (var product in products)
+                    {
+                        if (product.Status)
+                        {
+                            <tr class="text-center">
+                                <td>@product.ProductID</td>
+                                <td>@product.Name</td>
+                                <td>@product.Category.CategoryName</td>
+                                <td>@product.Description</td>
+                                <td>@product.Price</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        Aktif
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning" name="btnEdit" value="@product.ProductID" type="button" data-bs-toggle="modal" data-bs-target="#modalAddProduct"
+                                            data-type="edit"
+                                            data-id="@product.ProductID"
+                                            data-name="@product.Name"
+                                            data-category="@product.Category.CategoryID"
+                                            data-description="@product.Description"
+                                            data-price="@product.Price">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" name="btnDelete" value="@product.ProductID" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    <tr>
+                        <td colspan="7">
+                            <br />
+                        </td>
+                    </tr>
+                    foreach (var product in products)
+                    {
+                        if (!product.Status)
+                        {
+                            <tr class="text-center">
+                                <td>@product.ProductID</td>
+                                <td>@product.Name</td>
+                                <td>@product.Category.CategoryName</td>
+                                <td>@product.Description</td>
+                                <td>@product.Price</td>
+                                <td>
+                                    <span class="badge bg-danger">
+                                        Deaktif
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success" name="btnActivate" value="@product.ProductID">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">Ürün bulunamadı...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<!--#region emin misiniz-->
+<div class="modal fade" id="eminMisiniz">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Emin Misiniz?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Ürünü silmek istediğinize emin misiniz?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-bs-dismiss="modal" name="btn" value="deleteProduct">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region kullanıcı ekle-->
+<div class="modal fade" id="modalAddProduct">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Ürün Ekle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input name="ProductID" id="productID" hidden/>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Kategorisi</span>
+                    <select class="form-control form-select" name="Category" id="categoryName">
+                        @foreach (var category in categories)
+                        {
+                            if (category.Status)
+                            {
+                                <option value="@category.CategoryID">@category.CategoryName</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Ürün Adı</span>
+                    <input type="text" class="form-control" placeholder="Ürün Adı" name="Name" id="productName">
+                </div>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Açıklama</span>
+                    <input type="text" class="form-control" placeholder="Açıklama" name="Description" id="productDescription">
+                </div>
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text col-3">Fiyatı</span>
+                    <input type="number" class="form-control" placeholder="Fiyatı" name="Price" id="productPrice">
+                    <span class="input-group-text col-1">TL</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" name="btn" value="add">
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+
+<script type="text/javascript">
+    $('document').ready(function () {
+        $('#modalAddProduct').on('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var type = $(button).data('type');
+
+            if (type == "edit") {
+                $('#productID').val($(button).data('id'));
+                $('#title').text("Ürünü Düzenle");
+                $("#categoryName option[value = '" + $(button).data('category') + "']").prop('selected', 'selected');
+                $('#productName').val($(button).data('name'));
+                $('#productDescription').val($(button).data('description'));
+                $('#productPrice').val($(button).data('price'));
+            }
+            else {
+                $('#productID').val('');
+                $('#title').text("Ürün Ekle");
+                $('#categoryName').val($("#categoryName option:first").val());
+                $('#productName').val('');
+                $('#productDescription').val('');
+                $('#productPrice').val('');
+            }
+        });
+    });
+    
+</script>

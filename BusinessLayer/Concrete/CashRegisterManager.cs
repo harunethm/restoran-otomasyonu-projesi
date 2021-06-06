@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -10,19 +11,26 @@ namespace BusinessLayer.Concrete
 {
     public class CashRegisterManager : ICashRegisterService
     {
+        ICashRegister _cashRegister;
+
+        public CashRegisterManager(ICashRegister cashRegister)
+        {
+            _cashRegister = cashRegister;
+        }
+
         public void AddCashRegister(CashRegister p)
         {
-            throw new NotImplementedException();
+            _cashRegister.Insert(p);
         }
 
         public CashRegister GetByID(int p)
         {
-            throw new NotImplementedException();
+            return _cashRegister.Get(x => x.CashRegisterID == p);
         }
 
         public List<CashRegister> ListAll()
         {
-            throw new NotImplementedException();
+            return _cashRegister.List();
         }
     }
 }

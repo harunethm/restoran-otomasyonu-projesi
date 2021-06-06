@@ -1,0 +1,49 @@
+﻿@using EntityLayer.Concrete
+@{
+    ViewBag.Title = "Statistics";
+    List<Statistic> statistics = ViewBag.statistics;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    @if (statistics != null)
+    {
+        foreach (var stat in statistics)
+        {
+            <div class="small-box">
+                <div class="inner">
+                    <p hidden>@stat.ID</p>
+                    <h5>@stat.StatisticHeader</h5>
+                    <p>@stat.StatisticValue</p>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .small-box {
+        border-radius: .25rem;
+        display: block;
+        margin-bottom: 20px;
+        position: relative;
+        width: min-content;
+        min-width: 200px;
+        max-width: 500px;
+        margin: 10px;
+        color: black;
+    }
+
+        .small-box > .inner {
+            padding: 10px;
+        }
+</style>
+<script type="text/javascript">
+    $('document').ready(function () {
+        $('.small-box').each(function() {
+            var colors = ['#55efc4', '#81ecec', '#74b9ff', '#a29bfe', '#00b894', '#00cec9', '#0984e3', '#6c5ce7', '#ffeaa7', '#fab1a0', '#ff7675', '#fd79a8', '#fdcb6e', '#e17055'];
+            var random_color = colors[Math.floor(Math.random() * colors.length)];
+            $(this).css('background', random_color);
+        });
+    });   
+</script>

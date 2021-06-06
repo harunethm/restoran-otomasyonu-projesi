@@ -35,7 +35,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
         public ActionResult Orders()
         {
             ViewBag.orders = om.ListAll();
-            ViewBag.tables= tm.ListAll();
+            ViewBag.tables = tm.ListAll();
             return View();
         }
 

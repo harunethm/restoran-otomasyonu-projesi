@@ -57,6 +57,7 @@
     <Compile Include="Concrete\Product.cs" />
     <Compile Include="Concrete\Receipt.cs" />
     <Compile Include="Concrete\Reservation.cs" />
+    <Compile Include="Concrete\Statistic.cs" />
     <Compile Include="Concrete\Table.cs" />
     <Compile Include="Concrete\TakeAway.cs" />
     <Compile Include="Concrete\User.cs" />

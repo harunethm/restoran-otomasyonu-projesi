@@ -12,73 +12,52 @@
 
 }
 
-<br />
-<br />
-
 @*<form method="post" action="@Url.Action("Orders","Order")">*@
-    <div class="justify-content-center">
-        <div class="col-lg-6 col-md-8 container container-fluid">
-            <br />
-            @foreach (var table in tables)
-            {
-                if (table.Status == 1)
+<div class="align-content-center">
+    <div class="container container-fluid" style="min-width:460px">
+        <br />
+        @foreach (var table in tables)
+        {
+            <h3>MASA - @table.TableID</h3>
+            <table class="table table-bordered table-sm">
+                <tr>
+                    <th class="col-2">Sipariş Saati</th>
+                    <th class="col-2">Ürün</th>
+                    <th class="col-2">Adet</th>
+                    <th class="col-2">Durumu</th>
+                    <th class="col-2">Düzenle</th>
+                    <th class="col-2">Hazır</th>
+                </tr>
+                @foreach (var order in orders)
                 {
-                    <div class="row" style="min-width:440px">
-                        
-                        <button class="btn btn-light m-2" type="button" data-bs-toggle="collapse" data-bs-target="#orders-@table.TableID">
-                            <i class="fa fa-angle-down"></i>
-                            Masa - @table.TableID
-                        </button>
-                        
-                        <div class="clearfix"></div>
-                        <div class="collapse cllps mt-2 mb-2" id="orders-@table.TableID">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Sipariş Saati</th>
-                                        <th>Ürün</th>
-                                        <th>Adet</th>
-                                        <th>Durumu</th>
-                                        <th>Düzenle</th>
-                                        <th>Hazır</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var order in orders)
-                                    {
-                                        if (order.ReceiptID == table.ReceiptID && order.Status == 1)
-                                        {
-                                            <tr>
-                                                <td>@order.OrderDate.TimeOfDay</td>
-                                                <td>@order.Product.Name</td>
-                                                <td>@order.Amount</td>
-                                                <td>
-                                                    <span class="badge bg-info">Hazırlanıyor</span>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-warning" data-orderID="@order.OrderID" data-bs-target="#editOrder" data-bs-toggle="modal">
-                                                        <i class="fas fa-edit me-1"></i>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-success" data-orderID="@order.OrderID">
-                                                        <i class="fas fa-check me-1"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
+                    if (order.ReceiptID == table.ReceiptID && (order.Status == 1 || order.Status == 0))
+                    {
+                        <tr>
+                            <td>@order.OrderDate.TimeOfDay</td>
+                            <td>@order.Product.Name</td>
+                            <td>@order.Amount</td>
+
+                            <td>
+                                <span class="badge @(order.Status == 1 ? "bg-info" : "bg-success")">@(order.Status == 1 ? "Hazırlanıyor" : "Hazır")</span>
+                            </td>
+                            <td>
+                                <button id="btnEditOrder" class="btn btn-sm btn-warning" data-orderID="@order.OrderID" data-bs-target="#editOrder" data-bs-toggle="modal" data-name="@order.Product.Name" data-amount="@order.Amount" @(order.Status == 1 ? "" : "disabled")>
+                                    <i class="fas fa-edit me-1"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-success" data-orderID="@order.OrderID" @(order.Status == 1 ? "" : "disabled")>
+                                    <i class="fas fa-check me-1"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
                 }
-                <br />
-            }
-        </div>
-        <div class="clearfix"></div>
+            </table>
+            <br />
+        }
     </div>
+</div>
 @*</form>*@
 
 <!--#region Modal Edit Order-->
@@ -94,11 +73,11 @@
             <div class="modal-body">
                 <div class="input-group mb-2">
                     <span class="input-group-text col-4">Ürün Adı</span>
-                    <input type="text" readonly class="form-control" placeholder="Ürün Adı">
+                    <input id="modalInputName" type="text" readonly class="form-control" placeholder="Ürün Adı">
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text col-4">Sipariş Adedi</span>
-                    <input type="number" class="form-control" min="0">
+                    <input id="modalInputAmount" type="number" class="form-control" min="0">
                 </div>
             </div>
 
@@ -111,3 +90,16 @@
     </div>
 </div>
 <!--#endregion-->
+
+<script type="text/javascript">
+    $('#editOrder').on('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+
+        var name = $(button).data('name');
+
+        var amount = $(button).data('amount');
+
+        $('#modalInputAmount').val(amount);
+        $('#modalInputName').val(name);
+    });
+</script>

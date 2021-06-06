@@ -12,5 +12,8 @@ namespace BusinessLayer.Abstract
         List<User> ListAll();
         void AddUser(User p);
         User GetByID(int p);
+        User GetByPhoneNumber(string p);
+        void DeleteUser(User p);
+        void UpdateUser(User p);
     }
 }
