@@ -15,4 +15,4 @@ C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityLayer.pdb
 C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityLayer.dll.config
 C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.mig.resources
 C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.GenerateResource.cache
-C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.add_statClass.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.mig1.resources

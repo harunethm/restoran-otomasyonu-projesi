@@ -50,7 +50,7 @@
       <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>packages\FluentValidation.10.2.1\lib\netstandard2.0\FluentValidation.dll</HintPath>
+      <HintPath>packages\FluentValidation.10.2.3\lib\netstandard2.0\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -1774,6 +1774,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ErrorPagesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LogInController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -1862,6 +1863,12 @@
     <Content Include="Views\Admin\Products.cshtml" />
     <Content Include="Views\Admin\Statistics.cshtml" />
     <Content Include="Views\Admin\CashRegister.cshtml" />
+    <Content Include="Views\ErrorPages\Error404.cshtml" />
+    <Content Include="Views\ErrorPages\Error401.cshtml" />
+    <Content Include="Views\ErrorPages\Error403.cshtml" />
+    <Content Include="Views\ErrorPages\Error408.cshtml" />
+    <Content Include="Views\ErrorPages\Error500.cshtml" />
+    <Content Include="Views\Admin\Tables.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -9,15 +9,18 @@ using System.Web.Mvc;
 
 namespace RestoranOtomasyonuProjesi.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         OrderManager om = new OrderManager(new DalEfOrder());
         ReceiptManager rm = new ReceiptManager(new DalEfReceipt());
 
         // GET: Payment
-        public ActionResult Index(int receiptID = 3)
+        public ActionResult Index(int receiptID)
         {
-            List<Order> orders = om.GetByReceipID(receiptID);
+            // TODO ödeme al
+
+            List<Order> orders = om.GetByReceiptID(receiptID);
             double totalPrice = rm.GetByID(receiptID).Total;
 
             ViewBag.totalPrice = totalPrice;

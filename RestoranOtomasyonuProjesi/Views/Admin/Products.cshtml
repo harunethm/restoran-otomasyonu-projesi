@@ -6,105 +6,104 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<form action="@Url.Action("Users", "Admin")" method="post">
-    <div style="min-width:610px">
-        <span class="fs-2">Ürünler</span>
-        <button class="btn btn-success float-end" type="button" data-bs-toggle="modal" data-bs-target="#modalAddProduct" data-type="add">
-            <i class="fas fa-plus"></i>
-            Ürün Ekle
-        </button>
+<div style="min-width:610px">
+    <input hidden id="dataBank" data-type="" data-id="" data-name="" data-price="" data-description="" data-categoryid="" data-status="" />
+    <span class="fs-2">Ürünler</span>
+    <button class="btn btn-success float-end" type="button" data-bs-toggle="modal" data-bs-target="#modalAddProduct" data-type="add" id="add">
+        <i class="fas fa-plus"></i>
+        Ürün Ekle
+    </button>
 
 
-        <table class="table table-bordered">
-            <thead>
-                <tr class="text-center">
-                    <th class="col-1">Ürün ID</th>
-                    <th>Ürün Adı</th>
-                    <th>Kategori Adı</th>
-                    <th>Açıklama</th>
-                    <th class="col-1">Fiyatı</th>
-                    <th class="col-1">Durumu</th>
-                    <th class="col-2">#</th>
+    <table class="table table-bordered">
+        <thead>
+            <tr class="text-center">
+                <th class="col-1">Ürün ID</th>
+                <th>Ürün Adı</th>
+                <th>Kategori Adı</th>
+                <th>Açıklama</th>
+                <th class="col-1">Fiyatı</th>
+                <th class="col-1">Durumu</th>
+                <th class="col-2">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (products != null && products.Count > 0)
+            {
+                foreach (var product in products)
+                {
+                    if (product.Status)
+                    {
+                        <tr class="text-center">
+                            <td>@product.ProductID</td>
+                            <td>@product.Name</td>
+                            <td>@product.Category.CategoryName</td>
+                            <td>@product.Description</td>
+                            <td>@product.Price TL</td>
+                            <td>
+                                <span class="badge bg-success">
+                                    Aktif
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-warning edit" type="button" data-bs-toggle="modal" data-bs-target="#modalAddProduct"
+                                        data-type="edit"
+                                        data-id="@product.ProductID"
+                                        data-name="@product.Name"
+                                        data-category="@product.Category.CategoryID"
+                                        data-description="@product.Description"
+                                        data-price="@product.Price">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger delete" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz" data-id="@product.ProductID">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="7">
+                        <br />
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @if (products != null && products.Count > 0)
+                foreach (var product in products)
                 {
-                    foreach (var product in products)
+                    if (!product.Status)
                     {
-                        if (product.Status)
-                        {
-                            <tr class="text-center">
-                                <td>@product.ProductID</td>
-                                <td>@product.Name</td>
-                                <td>@product.Category.CategoryName</td>
-                                <td>@product.Description</td>
-                                <td>@product.Price</td>
-                                <td>
-                                    <span class="badge bg-success">
-                                        Aktif
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-warning" name="btnEdit" value="@product.ProductID" type="button" data-bs-toggle="modal" data-bs-target="#modalAddProduct"
-                                            data-type="edit"
-                                            data-id="@product.ProductID"
-                                            data-name="@product.Name"
-                                            data-category="@product.Category.CategoryID"
-                                            data-description="@product.Description"
-                                            data-price="@product.Price">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-danger" name="btnDelete" value="@product.ProductID" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    <tr>
-                        <td colspan="7">
-                            <br />
-                        </td>
-                    </tr>
-                    foreach (var product in products)
-                    {
-                        if (!product.Status)
-                        {
-                            <tr class="text-center">
-                                <td>@product.ProductID</td>
-                                <td>@product.Name</td>
-                                <td>@product.Category.CategoryName</td>
-                                <td>@product.Description</td>
-                                <td>@product.Price</td>
-                                <td>
-                                    <span class="badge bg-danger">
-                                        Deaktif
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-success" name="btnActivate" value="@product.ProductID">
-                                        <i class="fas fa-redo"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
+                        <tr class="text-center">
+                            <td>@product.ProductID</td>
+                            <td>@product.Name</td>
+                            <td>@product.Category.CategoryName</td>
+                            <td>@product.Description</td>
+                            <td>@product.Price TL</td>
+                            <td>
+                                <span class="badge bg-danger">
+                                    Deaktif
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-success reactivate" data-id="@product.ProductID">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </td>
+                        </tr>
                     }
                 }
-                else
-                {
-                    <tr>
-                        <td colspan="7" class="text-center">Ürün bulunamadı...</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</form>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center">Ürün bulunamadı...</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <!--#region emin misiniz-->
 <div class="modal fade" id="eminMisiniz">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Emin Misiniz?</h4>
@@ -116,15 +115,15 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-danger" data-bs-dismiss="modal" name="btn" value="deleteProduct">Sil</button>
+                <button class="btn btn-danger" data-bs-dismiss="modal" id="confirm-delete">Sil</button>
             </div>
         </div>
     </div>
 </div>
 <!--#endregion-->
-<!--#region kullanıcı ekle-->
+<!--#region ürün ekle-->
 <div class="modal fade" id="modalAddProduct">
-    <div class="modal-dialog">
+    <div class="modal-dialog  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="title">Ürün Ekle</h4>
@@ -133,40 +132,37 @@
 
             <div class="modal-body">
 
-                <input name="ProductID" id="productID" hidden/>
+                <input name="ProductID" id="productID" hidden />
 
                 <div class="input-group mb-2">
                     <span class="input-group-text col-3">Kategorisi</span>
-                    <select class="form-control form-select" name="Category" id="categoryName">
+                    <select class="form-control form-select" id="categoryName">
                         @foreach (var category in categories)
                         {
-                            if (category.Status)
-                            {
-                                <option value="@category.CategoryID">@category.CategoryName</option>
-                            }
+                            <option value="@category.CategoryID">@category.CategoryName</option>
                         }
                     </select>
                 </div>
 
                 <div class="input-group mb-2">
                     <span class="input-group-text col-3">Ürün Adı</span>
-                    <input type="text" class="form-control" placeholder="Ürün Adı" name="Name" id="productName">
+                    <input type="text" class="form-control" placeholder="Ürün Adı" id="productName">
                 </div>
 
                 <div class="input-group mb-2">
                     <span class="input-group-text col-3">Açıklama</span>
-                    <input type="text" class="form-control" placeholder="Açıklama" name="Description" id="productDescription">
+                    <input type="text" class="form-control" placeholder="Açıklama" id="productDescription">
                 </div>
 
                 <div class="input-group mb-2">
                     <span class="input-group-text col-3">Fiyatı</span>
-                    <input type="number" class="form-control" placeholder="Fiyatı" name="Price" id="productPrice">
+                    <input class="form-control" placeholder="Fiyatı" id="productPrice">
                     <span class="input-group-text col-1">TL</span>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-success" name="btn" value="add">
+                <button class="btn btn-success" id="confirm-add-edit">
                     <i class="fas fa-check"></i>
                 </button>
             </div>
@@ -198,6 +194,82 @@
                 $('#productPrice').val('');
             }
         });
+
+
+
+        $('.edit').click(function () {
+            //<input hidden id="dataBank" data-id="" data-name="" data-price="" data-description="" data-categoryid="" />
+
+            $('#dataBank').data('type', 'edit');
+            $('#dataBank').data('id', $(this).data('id'));
+            $('#dataBank').data('name', $(this).data('name'));
+            $('#dataBank').data('price', $(this).data('price'));
+            $('#dataBank').data('description', $(this).data('description'));
+            $('#dataBank').data('categoryid', $(this).data('categoryid'));
+            $('#dataBank').data('status', 'false');
+        });
+
+        $('.delete').click(function () {
+            $('#dataBank').data('type', '');
+            $('#dataBank').data('id', $(this).data('id'));
+            $('#dataBank').data('name', '');
+            $('#dataBank').data('price', '');
+            $('#dataBank').data('description', '');
+            $('#dataBank').data('categoryid', '');
+            $('#dataBank').data('status', 'false');
+        });
+
+        $('#add').click(function () {
+            $('#dataBank').data('type', 'add');
+            $('#dataBank').data('id', '');
+            $('#dataBank').data('name', $(this).data('name'));
+            $('#dataBank').data('price', $(this).data('price'));
+            $('#dataBank').data('description', $(this).data('description'));
+            $('#dataBank').data('categoryid', $(this).data('categoryid'));
+            $('#dataBank').data('status', '');
+        });
+
+        $('.reactivate').click(function () {
+            $('#dataBank').data('id', $(this).data('id'));
+            $('#dataBank').data('status', 'true');
+        });
+
+        $('#confirm-add-edit').click(function () {
+            var type = $('#dataBank').data('type');
+            if (type == 'add') {
+                var data = "productName:'" + $('#productName').val() + "',productPrice:'" + $('#productPrice').val() + "',productDescription:'" + $('#productDescription').val() + "',categoryID:" + $('#categoryName').children("option:selected").val();
+                console.log(data);
+                ajax('@Url.Action("AddProduct", "Admin")', data)
+            } else {
+                var data = "id:" + $('#dataBank').data('id') + ",productName:'" + $('#productName').val() + "',productPrice:'" + $('#productPrice').val() + "',productDescription:'" + $('#productDescription').val() + "',categoryID:" + $('#categoryName').children("option:selected").val();
+                console.log(data);
+                ajax('@Url.Action("EditProduct", "Admin")', data)
+            }
+        });
+
+        $('#confirm-delete, .reactivate').click(function () {
+            var data = "id:" + $('#dataBank').data('id') + ",status:'" + $('#dataBank').data('status') + "'";
+            console.log(data);
+            ajax('@Url.Action("ProductStatusChange", "Admin")', data);
+        });
+
+        function ajax(url, data) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: "{" + data + "}",
+                contentType: 'application/json; charset=utf-8',
+                success: function (fdata) {
+                    if (fdata.confirm)
+                        location.reload();
+                    else
+                        alert(fdata.errMessage);
+                },
+                error: function (fdata) {
+                    console.log(fdata.error);
+                }
+            });
+        };
     });
-    
 </script>

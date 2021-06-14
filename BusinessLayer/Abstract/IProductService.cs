@@ -13,5 +13,8 @@ namespace BusinessLayer.Abstract
         List<Product> ListAll();
         Product GetByID(int p);
         List<Product> GetByCategoryID(int p);
+        void UpdateProduct(Product p);
+        int IsProductExist(string productName);
+
     }
 }

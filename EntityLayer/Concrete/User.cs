@@ -15,17 +15,11 @@ namespace EntityLayer.Concrete
         [StringLength(20)] // Kişinin adı soyadı
         public string Name { get; set; }
 
-        [StringLength(20)] // Kişinin adı soyadı
-        public string Surname { get; set; }
-
         [StringLength(50)] // Otomasyona giriş şifresi
         public string Password { get; set; }
 
-        [StringLength(10)] // İletişim numarası
+        [StringLength(20)] // İletişim numarası - otomasyona giriş kimliği
         public string PhoneNumber { get; set; }
-
-        // Yetki düzeyi; 0 => Aşçı, 1 => Garson, 2 => Admin 
-        public int AuthorityLevel { get; set; }
 
         // Sisteme kayıt olma tarihi
         public DateTime RegisterDate { get; set; }
@@ -35,6 +29,9 @@ namespace EntityLayer.Concrete
 
         // Son şifre değiştirme tarihi
         public DateTime LastPasswordChange { get; set; }
+
+        // Admin, garson, aşçı
+        public string Role { get; set; }
 
         // Kullanıcı hala çalışıyor mu; 1 => aktif, 0 => pasif
         public bool Status { get; set; }

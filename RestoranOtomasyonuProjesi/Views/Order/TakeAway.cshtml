@@ -7,88 +7,102 @@
 }
 
 @*<form method="post" action="@Url.Action("TakeAway","Order")">*@
-    <div class="justify-content-center">
-        <div class="col-lg-6 col-md-8 container container-fluid">
-            <!--#region menü-->
-            @if (categories != null && products != null)
+<div class="justify-content-center">
+    <div class="col-lg-6 col-md-8 container container-fluid">
+        <!--#region menü-->
+        @if (categories != null && products != null)
+        {
+            foreach (var category in categories)
             {
-                foreach (var category in categories)
-                {
-                    <br />
-                    <h4 class="text-center" id="@category.CategoryName">@category.CategoryName</h4>
-                    <table class="table small">
-                        <tr>
-                            <th class="text-center">Sipariş Sil</th>
-                            <th class="text-center">Ürün Adı</th>
-                            <th class="text-center">Adet Fiyatı</th>
-                            <th class="text-center">Sipariş Adedi</th>
-                            <th class="text-center">Sipariş Ver</th>
-                        </tr>
-                        @foreach (var product in products)
+                <br />
+                <h4 class="text-center" id="@category.CategoryName">@category.CategoryName</h4>
+                <table class="table small">
+                    <tr>
+                        <th class="text-center">Sipariş Sil</th>
+                        <th class="text-center">Ürün Adı</th>
+                        <th class="text-center">Adet Fiyatı</th>
+                        <th class="text-center">Sipariş Adedi</th>
+                        <th class="text-center">Sipariş Ver</th>
+                    </tr>
+                    @foreach (var product in products)
+                    {
+                        if (product.CategoryID == category.CategoryID)
                         {
-                            if (product.CategoryID == category.CategoryID)
-                            {
-                                <tr>
-                                    <td class="col-1">
-                                        <button class="btn btn-danger float-start" name="siparisAzalt" id="btn_siparisAzalt_@product.ProductID" value="@product.ProductID">
-                                            -
-                                        </button>
-                                    </td>
-                                    <td class="text-center col-4">@product.Name</td>
-                                    <td class="text-center col-3">@product.Price TL</td>
-                                    <td class="text-center col-3">
-                                        <input type="number" class="form-control col-1 text-center" value="0" id="orderAmount_@product.ProductID" />
-                                        <!--masaya ait sparişler içerisinden bu ürünün sipariş adedini getir-->
-                                    </td>
-                                    <td class="col-1">
-                                        <button class="btn btn-success float-end" name="siparisArttir" id="btn_siparisArttir_@product.ProductID" value="@product.ProductID">
-                                            +
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
+                            <tr>
+                                <td class="col-1">
+                                    <button class="btn btn-danger float-start" name="siparisAzalt" id="btn_siparisAzalt_@product.ProductID" value="@product.ProductID">
+                                        -
+                                    </button>
+                                </td>
+                                <td class="text-center col-4">@product.Name</td>
+                                <td class="text-center col-3">@product.Price TL</td>
+                                <td class="text-center col-3">
+                                    <input type="number" class="form-control col-1 text-center" value="0" id="orderAmount_@product.ProductID" />
+                                    <!--masaya ait sparişler içerisinden bu ürünün sipariş adedini getir-->
+                                </td>
+                                <td class="col-1">
+                                    <button class="btn btn-success float-end" name="siparisArttir" id="btn_siparisArttir_@product.ProductID" value="@product.ProductID">
+                                        +
+                                    </button>
+                                </td>
+                            </tr>
                         }
-                    </table>
-                }
+                    }
+                </table>
             }
-            <!--#endregion-->
-        </div>
-        <div class="clearfix"></div>
-        <br />
-        <br />
-        <!--#region navbar-->
-        <nav class="navbar navbar-light fixed-bottom bg-dark">
-
-            <div class="col-lg-6 col-md-8  container container-fluid">
-                <!--sepeti görüntüle => popup, siparişi onayla, siparişi iptal et-->
-                <button class="btn btn-outline-danger" name="btn_iptal">
-                    <i class="fas fa-times"></i>
-                    İptal
-                </button>
-
-                <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#sepet" name="btn_sepet">
-                    <i class="fas fa-shopping-cart"></i>
-                    Sepet
-                </button>
-
-                <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#adress" name="btn_adress">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Adres
-                </button>
-
-                <button class="btn btn-outline-success" name="btn_onayla">
-                    <i class="fas fa-check"></i>
-                    Onayla
-                </button>
-            </div>
-        </nav>
+        }
         <!--#endregion-->
     </div>
+    <div class="clearfix"></div>
+    <br />
+    <br />
+    <!--#region navbar-->
+    <nav class="navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-bottom bg-dark mt-auto">
+        <div class="container container-fluid">
+            <button class="navbar-toggler navbar-dark m-auto" type="button" data-bs-toggle="collapse" data-bs-target="#secenekler">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="col-lg-6 col-md-8 collapse navbar-collapse justify-content-around" id="secenekler">
+
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-danger m-2" name="btn_iptal">
+                            <i class="fas fa-times"></i>
+                            İptal
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-primary m-2" type="button" data-bs-toggle="modal" data-bs-target="#sepet" name="btn_sepet">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sepet
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="btn btn-outline-warning m-2" type="button" data-bs-toggle="modal" data-bs-target="#adress" name="btn_adress">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Adres
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="btn btn-outline-success m-2" name="btn_onayla">
+                            <i class="fas fa-check"></i>
+                            Onayla
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--#endregion-->
+</div>
 @*</form>*@
 
 <!--#region Modal Sepet-->
 <div class="modal fade" id="sepet" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -126,10 +140,9 @@
     </div>
 </div>
 <!--#endregion-->
-
 <!--#region Modal Adres-->
 <div class="modal fade" id="adress" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -161,9 +174,6 @@
     </div>
 </div>
 <!--#endregion-->
-
-
-
 @*<script type="text/javascript">
         $('document').ready(function(){
             $('#siparisArttir').on('click', function () {

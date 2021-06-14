@@ -34,5 +34,20 @@ namespace BusinessLayer.Concrete
         {
             return _table.Get(x => x.TableID == p);
         }
+
+        public void Update(Table p)
+        {
+            _table.Update(p);
+        }
+
+        public List<Table> GetTablesForOrders()
+        {
+            return _table.List(x => x.Status && x.Receipt.Orders.Where(y => y.Status == 1 || y.Status == 2).ToList().Count > 0);
+        }
+
+        public bool IsAllEmpty()
+        {
+            return _table.List(x => x.Availability > 0 && x.Status == true).Count > 0 ? false : true;
+        }
     }
 }

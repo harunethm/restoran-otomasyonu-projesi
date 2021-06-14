@@ -13,17 +13,8 @@
         </div>
 
         <div class="input-group mb-2">
-            <span class="input-group-text col-3">Soyisim</span>
-            <input type="text" class="form-control" placeholder="Soyisim" name="Surname" id="Surname" value="@user.Surname">
-        </div>
-
-        <div class="input-group mb-2">
             <span class="input-group-text col-3">Tel No</span>
             <input type="tel" class="form-control" placeholder="5xxxxxxxxx" maxlength="10" name="PhoneNumber" id="PhoneNumber" value="@user.PhoneNumber">
-        </div>
-
-        <div class="input-group mb-2" hidden>
-            <input class="form-control" name="AuthorityLevel" id="AuthorityLevel" value="@user.AuthorityLevel">
         </div>
 
         <div class="input-group mb-2">
@@ -39,12 +30,39 @@
 </form>
 <script type="text/javascript">
     $('document').ready(function () {
-        $('input').change(function () {
+        $('input').on('input', function () {
             $('#btnApplyChanges').removeAttr('disabled');
         });
 
         $('#passwordVisual').click(function () {
             $('#Password').attr("type", $('#Password').attr("type") == "password" ? "text" : "password");
         });
+
+        $('#btnApplyChanges').click(function () {
+            var url = '@Url.Action("ApplyChanges", "Profile")';
+            var data = "id:" +@user.UserID+",name:'" + $('#Name').val() + "',phone:'" + $('#PhoneNumber').val() + "',password:'" + $('#Password').val()+"'";
+            console.log(data);
+            ajax(url, data);
+        });
+
+        function ajax(url, data) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: "{" + data + "}",
+                contentType: 'application/json; charset=utf-8',
+                success: function (fdata) {
+                    if (fdata.confirm)
+                        alert("Değişiklikler başarıyla kaydedildi.")
+                    else
+                        alert(fdata.errMessage);
+                        location.reload();
+                },
+                error: function (fdata) {
+                    console.log(fdata.error);
+                }
+            });
+        };
     });
 </script>

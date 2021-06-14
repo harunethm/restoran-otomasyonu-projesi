@@ -12,5 +12,7 @@ namespace BusinessLayer.Abstract
         List<Table> ListAll();
         void AddTable(Table p);
         Table GetByID(int p);
+        void Update(Table p);
+        bool IsAllEmpty();
     }
 }

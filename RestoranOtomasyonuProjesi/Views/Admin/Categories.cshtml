@@ -5,8 +5,10 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<input hidden id="dataBank" data-id="" data-name="" data-status="" data-type="" />
+
 <span class="fs-2">Kategoriler</span>
-<button class="btn btn-success float-end" type="button" data-bs-toggle="modal" data-bs-target="#modalAddCategory" data-type="add">
+<button class="btn btn-success float-end add" type="button" data-bs-toggle="modal" data-bs-target="#modalAddCategory" data-type="add">
     <i class="fas fa-plus"></i>
     Kategori Ekle
 </button>
@@ -34,10 +36,10 @@
                             <span class="badge bg-success">Aktif</span>
                         </td>
                         <td>
-                            <button class="btn btn-warning" data-id="@category.CategoryID" data-name="@category.CategoryName" data-type="edit" type="button" data-bs-target="#modalAddCategory" data-bs-toggle="modal">
+                            <button class="btn btn-warning" data-type="edit" type="button" data-bs-target="#modalAddCategory" data-bs-toggle="modal" data-id="@category.CategoryID" data-name="@category.CategoryName">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz">
+                            <button class="btn btn-danger delete" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz" data-id="@category.CategoryID" data-status="false">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
@@ -60,7 +62,7 @@
                             <span class="badge bg-danger">Deaktif</span>
                         </td>
                         <td>
-                            <button class="btn btn-success">
+                            <button class="btn btn-success reactivate" data-id="@category.CategoryID" data-status="true">
                                 <i class="fas fa-redo"></i>
                             </button>
                         </td>
@@ -79,7 +81,7 @@
 
 <!--#region emin misiniz-->
 <div class="modal fade" id="eminMisiniz">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Emin Misiniz?</h4>
@@ -91,7 +93,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-danger" data-bs-dismiss="modal" name="btn" value="deleteCategory">Sil</button>
+                <button class="btn btn-danger confirm-delete" data-bs-dismiss="modal">Sil</button>
             </div>
         </div>
     </div>
@@ -99,7 +101,7 @@
 <!--#endregion-->
 <!--#region kategori ekle-->
 <div class="modal fade" data-backdrop="static" id="modalAddCategory">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="title">Kategori Ekle</h4>
@@ -107,17 +109,14 @@
             </div>
 
             <div class="modal-body">
-
-                <input id="modalInputCategoryID" name="CategoryID" hidden />
-
                 <div class="input-group mb-2">
                     <span class="input-group-text col-3">Kategori Adı</span>
-                    <input type="text" class="form-control" placeholder="Kategori Adı" name="CategoryName" id="modalInputCategoryName">
+                    <input type="text" class="form-control" placeholder="Kategori Adı" id="modalInputCategoryName">
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-success" name="btn" value="add">
+                <button class="btn btn-success" id="modalBtnConfirm">
                     <i class="fas fa-check"></i>
                 </button>
             </div>
@@ -127,20 +126,84 @@
 <!--#endregion-->
 
 <script type="text/javascript">
-    $('#modalAddCategory').on('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
+    $('document').ready(function () {
+        $('#modalAddCategory').on('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var type = $(button).data('type');
 
-        var type = $(button).data('type');
+            if (type == "edit") {
+                $('#title').text("Kategoriyi Düzenle");
+                $('#modalInputCategoryName').val($(button).data('name'));
 
-        if (type == "edit") {
-            $('#title').text("Kategoriyi Düzenle");
-            $('#modalInputCategoryID').val($(button).data('id'));
-            $('#modalInputCategoryName').val($(button).data('name'));
-        }
-        else {
-            $('#title').text("Kategori Ekle");
-            $('#modalInputCategoryID').val('');
-            $('#modalInputCategoryName').val('');
-        }
+                $('#dataBank').data('id', $(button).data('id'));
+                $('#dataBank').data('name', $(button).data('name'));
+                $('#dataBank').data('status', $(button).data('status'));
+            }
+            else {
+                $('#title').text("Kategori Ekle");
+                $('#modalInputCategoryName').val('');
+
+                $('#dataBank').data('id', '');
+                $('#dataBank').data('name', '');
+                $('#dataBank').data('status', '');
+            }
+            $('#dataBank').data('type', type);
+        });
+
+        $('#modalBtnConfirm').click(function () {
+            var type = $('#dataBank').data('type');
+            if (type == "edit") {
+                var data = "id:" + $('#dataBank').data('id') + ",categoryName:'" + $('#modalInputCategoryName').val() + "'";
+                ajax('@Url.Action("EditCategory", "Admin")', data, function (data) {
+                    if (data.confirm)
+                        location.reload();
+                    else
+                        alert(data.errMessage);
+                }, function (data) {
+                        console.log(data);
+                });
+            }
+            else {
+                var data = "categoryName:'" + $('#modalInputCategoryName').val() + "'";
+                ajax('@Url.Action("AddCategory", "Admin")', data, function (data) {
+                    if (data.confirm)
+                        location.reload();
+                    else
+                        alert(data.errMessage);
+                }, function (data) {
+                        console.log(data);
+                });
+            }
+        });
+
+        $('.delete, .reactivate').click(function () {
+            $('#dataBank').data('id', $(this).data('id'));
+            $('#dataBank').data('status', $(this).data('status'));
+        });
+
+        $('.confirm-delete, .reactivate').click(function () {
+            var data = "id:" + $('#dataBank').data('id') + ",status:'" + $('#dataBank').data('status') + "'";
+                ajax('@Url.Action("CategoryStatusChange", "Admin")', data, function (data) {
+                    if (data.confirm)
+                        location.reload();
+                    else
+                        alert(data.errMessage);
+                }, function (data) {
+                        console.log(data);
+                });
+        });
+
+        function ajax(url, data, success, error) {
+            console.log(data);
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: "{" + data + "}",
+                contentType: 'application/json; charset=utf-8',
+                success: success,
+                error: error,
+            });
+        };
     });
 </script>

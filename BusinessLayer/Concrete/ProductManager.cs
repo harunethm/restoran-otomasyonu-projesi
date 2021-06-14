@@ -32,12 +32,23 @@ namespace BusinessLayer.Concrete
 
         public Product GetByID(int p)
         {
-            return _product.Get(x => x.CategoryID == p);
+            return _product.Get(x => x.ProductID == p);
         }
 
         public List<Product> GetByCategoryID(int p)
         {
             return _product.List(x => x.CategoryID == p);
+        }
+
+        public int IsProductExist(string productName)
+        {
+            Product _ = _product.Get(x => x.Name == productName);
+            return _ != null ? _.ProductID : 0;
+        }
+
+        public void UpdateProduct(Product p)
+        {
+            _product.Update(p);
         }
     }
 }

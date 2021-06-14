@@ -1,0 +1,231 @@
+﻿@using EntityLayer.Concrete
+@{
+    ViewBag.Title = "Tables";
+    List<Table> tables = ViewBag.tables;
+    List<Order> orders = ViewBag.orders;
+    bool flag = false;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<span class="fs-2">Masalar</span>
+<button class="btn btn-success float-end ms-2" data-bs-toggle="modal" data-bs-target="#modalSettings">
+    <i class="fas fa-cog"></i>
+    Ayarlar
+</button>
+<button class="btn btn-primary float-end me-2" id="collapseAll" data-collapsed="false">
+    <i class="fas fa-angle-down"></i>
+    Hepsini Aç-Kapat
+    <i class="fas fa-angle-up"></i>
+</button>
+
+<div class="row">
+    <div class="accordion">
+        @foreach (var table in tables)
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionBody-@table.TableID">
+                        @table.Name
+
+                        @if (!table.Status)
+                        {
+                            <span class="badge bg-danger ms-3">Aktif Değil</span>
+                        }else
+                        {
+                        <span class="badge bg-success ms-3">Aktif</span>
+
+                        }
+
+                    </button>
+                </h2>
+                <div id="accordionBody-@table.TableID" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <table class="table table-borderless table-sm">
+                            <tr>
+                                <th class="col-3">Sipariş Tarihi</th>
+                                <th class="col-3">Ürün</th>
+                                <th class="col-3">Adet</th>
+                                <th class="col-3">Durumu</th>
+
+                            </tr>
+                            @{flag = false;}
+                            @foreach (var order in orders)
+                            {
+                                if (order.ReceiptID == table.ReceiptID)
+                                {
+                                    { flag = true; }
+                                    <tr>
+                                        <td>@order.OrderDate</td>
+                                        <td>@order.Product.Name</td>
+                                        <td>@order.Amount</td>
+
+                                        <td>
+                                            @switch (order.Status)
+                                            {
+                                                case 1:
+                                                    <span class="badge bg-primary">Hazırlanıyor</span>
+                                                    break;
+                                                case 2:
+                                                    <span class="badge bg-success">Hazır</span>
+                                                    break;
+                                                case 3:
+                                                    <span class="badge bg-warning">Eski Sipariş</span>
+                                                    break;
+                                                case 4:
+                                                    <span class="badge bg-danger">İptal Edilmiş</span>
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            @if (!flag)
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">Masaya ait sipariş bulunamadı.</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+        }
+    </div>
+</div>
+<!--#region masa ekle-->
+<div class="modal fade" data-backdrop="static" id="modalSettings">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Ayarlar</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="input-group mb-2">
+                    <span class="input-group-text">Masa Ekle</span>
+                    <input type="text" class="form-control" placeholder="Masa Adı" id="modalInputTableName">
+                    <button class="btn btn-success" id="btnAdd"><i class="fas fa-plus me-2"></i>Ekle</button>
+                </div>
+                <br />
+                @foreach (var table in tables)
+                {
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Masa Adı</span>
+                        <input type="text" class="form-control modalInputEdit" data-id="@table.TableID" data-origin="@table.Name" placeholder="Masa Adı" value="@table.Name"@(!table.Status ? "disabled" : "")>
+                        <button class="btn btn-warning btnEdit" data-id="@table.TableID" data-type="redo" hidden id=""><i class="fas fa-redo me-2"></i>Geri Al</button>
+                        <button class="btn btn-success btnEdit" data-id="@table.TableID" data-type="confirm" hidden id=""><i class="fas fa-check me-2"></i>Kaydet</button>
+
+                        @if (table.Status)
+                        {
+                            <button class="btn btn-danger btnDelete" data-id="@table.TableID"><i class="fas fa-times me-2"></i>Sil</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-success btnDelete" data-id="@table.TableID"><i class="fas fa-redo me-2"></i>Aktifleştir</button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<script type="text/javascript">
+    $('document').ready(function () {
+
+
+        $('#collapseAll').click(function () {
+            if (!$(this).data('collapsed')) {
+                $(this).data('collapsed', 'true');
+                $('.accordion-button').each(function () {
+                    if (!$(this).hasClass('collapsed')) {
+                        $(this).addClass('collapsed');
+                    }
+                });
+                $('.accordion-collapse').each(function () {
+                    if ($(this).hasClass('show')) {
+                        $(this).removeClass('show');
+                    }
+                });
+
+            } else {
+                $(this).data('collapsed', false);
+                $('.accordion-button').each(function () {
+                    if ($(this).hasClass('collapsed')) {
+                        $(this).removeClass('collapsed');
+                    }
+                });
+                $('.accordion-collapse').each(function () {
+                    if (!$(this).hasClass('show')) {
+                        $(this).addClass('show');
+                    }
+                });
+            }
+        });
+        $('.accordion-button').click(function () {
+            $('#collapseAll').data('collapsed', false);
+        });
+
+        $('.modalInputEdit').on('input', function () {
+            $(".btnEdit[data-id='" + $(this).data('id') + "']").attr('hidden', false);
+            $(".btnDelete[data-id='" + $(this).data('id') + "']").attr('hidden', true);
+        });
+
+        $('.btnDelete').click(function () {
+            // sil
+            var url = '@Url.Action("DeleteTable", "Admin")';
+            var data = "id:" + $(this).data('id');
+            console.log(data);
+            ajax(url, data, true);
+        });
+
+
+        $('.btnEdit').click(function () {
+            if ($(this).data('type') == 'confirm') {
+                // editi onayla
+                var url = '@Url.Action("EditTable", "Admin")';
+                var data = "id:" + $(this).data('id')+",name:'" + $(".modalInputEdit[data-id=" + $(this).data('id')+"]").val() + "'";
+                ajax(url, data, false);
+            }
+            else if ($(this).data('type') == 'redo'){
+                // redo
+                $(".modalInputEdit[data-id=" + $(this).data('id') + "]").val($(".modalInputEdit[data-id=" + $(this).data('id') + "]").data('origin'));
+            }
+
+            $(".btnEdit[data-id='" + $(this).data('id') + "']").attr('hidden', true);
+            $(".btnDelete[data-id='" + $(this).data('id') + "']").attr('hidden', false);
+        });
+
+        $('#btnAdd').click(function () {
+            var url = "@Url.Action("AddTable", "Admin")";
+            var data = "name:'" + $('#modalInputTableName').val() + "'";
+            ajax(url, data, true);
+        });
+
+        function ajax(url, data, reload) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: "{" + data + "}",
+                contentType: 'application/json; charset=utf-8',
+                success: function (fdata) {
+                    if (fdata.confirm && reload) {
+                        location.reload();
+                    }
+                    else if(!fdata.confirm)
+                        alert(fdata.errMessage);
+                },
+                error: function (fdata) {
+                    console.log(fdata.error);
+                }
+            });
+        };
+    });
+</script>

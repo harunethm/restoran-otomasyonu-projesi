@@ -17,32 +17,40 @@
             <table class="table table-hover" id="table">
                 <thead>
                     <tr>
-                        <th class="text-start col-4">Masa Numarası</th>
-                        <th class="text-center col-4">Durumu</th>
-                        <th class="text-end col-4">Sipariş Al</th>
+                        <th class="text-start col-4">Siparişler</th>
+                        <th class="text-center col-4">Masa</th>
+                        <th class="text-end col-4">Durumu</th>
+                        @*<th class="text-end col-4">Sipariş Al</th>*@
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var table in tables)
                     {
-                        <tr id="tr" data-status="@table.Status" data-id="@table.TableID">
+                        if (table.Status)
+                        {
 
-                            <td class="text-start col-4">
-                                <a class="tableInfo" data-bs-toggle="modal" data-bs-target="#sepet" data-tableID="@table.TableID">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-                                Masa-@table.TableID
-                            </td>
+                            <tr id="tr" data-status="@table.Availability" data-id="@table.TableID">
+                                <td class="text-start col-4">
 
-                            <td class="text-center col-4"><span class="badge rounded-pill @(table.Status == 0 ? "bg-success" : table.Status == 1 ? "bg-danger" : "bg-warning") ">@(table.Status == 0 ? "Boş" : table.Status == 1 ? "Dolu" : "Rezerve")</span></td>
+                                    @if (table.Availability == 1)
+                                    {
+                                        <a class="tableInfo fs-5" data-bs-toggle="modal" data-bs-target="#sepet" data-id="@table.TableID">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                    }
+                                </td>
 
-                            <!--geçici olarak var, silinecek-->
-                            <td>
-                                <button class="btn btn-outline-primary float-end" type="submit" name="id" value="@table.TableID">
-                                    <i class="fa fa-arrow-circle-right"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                <td class="text-center col-4">
+                                    @table.Name
+                                </td>
+
+                                <td class="text-end col-4 tableAvailability" data-id="@table.TableID" data-availability="@table.Availability">
+                                    <span class="badge rounded-pill @(table.Availability == 0 ? "bg-success" : table.Availability == 1 ? "bg-danger" : "bg-warning") ">
+                                        @(table.Availability == 0 ? "Boş" : table.Availability == 1 ? "Dolu" : "Rezerve")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -57,9 +65,31 @@
     </div>
 </footer>
 
+<div class="modal fade" id="tableOptions" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Seçenekler</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body ">
+                <div class="row">
+                    <button class="btn btn-warning mb-3 btnTableOptions" data-type="rezervation" data-id="">Rezerve Et</button>
+                    <button class="btn btn-success mb-3 btnTableOptions" data-type="order" data-id="">Sipariş Al</button>
+                    <button class="btn btn-primary mb-3 btnTableOptions" data-type="payment" data-id="">Ödeme Al</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!--#region Modal Sepet-->
 <div class="modal fade" id="sepet" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog  modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -68,20 +98,24 @@
             </div>
 
             <div class="modal-body">
-                <table class="table">
-                    <tr>
-                        <th class="text-start col-4">Ürün Adı</th>
-                        <th class="text-center col-4">Sipariş Adedi</th>
-                        <th class="text-end col-4">Birim Fiyatı</th>
-                    </tr>
-                    @*<tr>
-                            @foreach (var product in sepettekiler)
-                            {
-                                <td class="text-start col-4">@product.Name</td>
-                                <td class="text-center col-4">@product.Amount</td>
-                                <td class="text-end col-4">@product.Price TL</td>
-                            }
-                        </tr>*@
+                <table class="table" id="cart">
+                    <thead>
+                        <tr>
+                            <th class="text-start col-4">Ürün Adı</th>
+                            <th class="text-center col-4">Sipariş Adedi</th>
+                            <th class="text-end col-4">Birim Fiyatı</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*<tr>
+                                @foreach (var product in sepettekiler)
+                                {
+                                    <td class="text-start col-4">@product.Name</td>
+                                    <td class="text-center col-4">@product.Amount</td>
+                                    <td class="text-end col-4">@product.Price TL</td>
+                                }
+                            </tr>*@
+                    </tbody>
                 </table>
             </div>
 
@@ -99,19 +133,87 @@
 <!--#endregion-->
 
 
-<script type="text/javascript">
-    $(document).ready(function () {
+<div>
+    <script type="text/javascript">
+    $('document').ready(function () {
         $('#table #tr').click(function () { //masaya tıklama olayı
-            console.log(" ");
-            console.log("id = " + $(this).data("id"));
-            console.log("status = " + $(this).data("status"));
-            //$(location).prop('href', '@Url.Action("Orders", "Order")')
+            var id = $(this).data("id");
+            $('#tableOptions').modal('show');
+            $('.btnTableOptions').data('id', id);
+            $('.btnTableOptions[data-type="rezervation"]').attr('hidden', false);
+            $('.btnTableOptions[data-type="order"]').attr('hidden', false);
+            $('.btnTableOptions[data-type="payment"]').attr('hidden', false);
+            var availability = $('.tableAvailability[data-id=' + id + ']').data('availability');
+            switch (availability) {
+                case 0:
+                    $('.btnTableOptions[data-type="payment"]').attr('hidden', true);
+                    break;
+                case 1:
+                    $('.btnTableOptions[data-type="rezervation"]').attr('hidden', true);
+                    break;
+                case 2:
+                    $('.btnTableOptions[data-type="rezervation"]').attr('hidden', true);
+                    $('.btnTableOptions[data-type="payment"]').attr('hidden', true);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        $('.btnTableOptions').click(function () {
+            var type = $(this).data('type');
+            var id = $(this).data('id');
+
+            var url = "@Url.Action("TableClick", "Order")";
+            var data = "type:'"+type+"',id:"+id;
+            ajax(url, data, function (fdata) {
+                if (fdata.confirm) {
+                    window.location.href = fdata.destination;
+                }
+                else
+                    alert(fdata.errMessage);
+            }, function () {
+                console.log("event is not successfull");
+            });
         });
 
         $('.tableInfo').click(function (e) {
+            e.stopPropagation();
+            var id = $(this).data('id');
+            var url = "@Url.Action("TableInfo", "Order")";
+            var data = "id:"+id;
+            $('.sepet').remove();
+            ajax(url, data, function (data) {
+                var orders = data.orders;
+                for (var i = 0; i < orders.length; i+=3) {
+                    var tableData = '<tr class="sepet">' +
+                        '<td class="text-start col-4">' + orders[i]+'</td>' +
+                        '<td class="text-center col-4">' + orders[i+1]+'</td>' +
+                        '<td class="text-end col-4">' + orders[i+2]+' TL</td>' +
+                                    '</tr>';
+                    $('#cart > tbody:last-child').append(tableData);
+                }
+
+            }, function (data) {
+                    console.log("error");
+            });
         });
     });
-</script>
+
+
+    function ajax(url, data, success, error) {
+        $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: "{" + data + "}",
+                contentType: 'application/json; charset=utf-8',
+                success: success,
+                error: error,
+            });
+    }
+    </script>
+</div>
 
 <style>
     #table #tr {

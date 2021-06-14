@@ -15,5 +15,6 @@ namespace BusinessLayer.Abstract
         User GetByPhoneNumber(string p);
         void DeleteUser(User p);
         void UpdateUser(User p);
+
     }
 }

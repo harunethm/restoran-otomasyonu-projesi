@@ -33,9 +33,19 @@ namespace BusinessLayer.Concrete
             return _order.Get(x => x.OrderID == p);
         }
 
-        public List<Order> GetByReceipID(int p)
+        public List<Order> GetByReceiptID(int p)
         {
             return _order.List(x => x.ReceiptID == p);
+        }
+
+        public List<Order> GetInCartByReceiptID(int p)
+        {
+            return _order.List(x => x.ReceiptID == p && x.Status == 0);
+        }
+
+        public void Update(Order p)
+        {
+            _order.Update(p);
         }
     }
 }

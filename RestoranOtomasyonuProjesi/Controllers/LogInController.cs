@@ -6,53 +6,63 @@ using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace RestoranOtomasyonuProjesi.Controllers
 {
     public class LogInController : Controller
     {
-        private readonly CategoryManager cm = new CategoryManager(new DalEfCategory());
-        private readonly ProductManager pm = new ProductManager(new DalEfProduct());
         private readonly UserManager um = new UserManager(new DalEfUser());
 
         [HttpGet]
         public ActionResult Entry()
         {
-            ViewBag.categories = cm.ListAll();
-            ViewBag.products = pm.ListAll();
+            CategoryManager categoryManager = new CategoryManager(new DalEfCategory());
+            ViewBag.categories = categoryManager.ListAll();
+            ProductManager productManager = new ProductManager(new DalEfProduct());
+            ViewBag.products = productManager.ListAll();
             return View();
         }
 
         [HttpGet]
         public ActionResult LogIn()
         {
-            List<User> users = um.ListAll();
-            ViewBag.users = users;
             return View();
         }
 
-        [HttpPost]
-        public ActionResult LogIn(string phoneNumber, string password)
+        public ActionResult CheckUser(string phone, string password)
         {
-            User user = um.GetByPhoneNumber(phoneNumber);
-            try
+            User user = um.GetByPhoneNumber(phone);
+
+            // kullanıcı var ve şifresi doğru ise
+            if (user != null && user.Password.Equals(password)) 
             {
-                if (user != null && password != null && user.Password.Equals(password))
-                    return user.AuthorityLevel == 2 ? RedirectToAction("Statistics", "Admin") : RedirectToAction("Menu", "Home");
-                else
-                    return RedirectToAction("LogIn");
+                FormsAuthentication.SetAuthCookie(user.PhoneNumber, false);
+                Session["userID"] = user;
+
+                // admin ise admin controller'a değilse home controller'a
+                string controller = user.Role == "admin" ? "Admin" : "Home";
+
+                // admin ise statistics action'a değilse menu action'a
+                string action = user.Role == "admin" ? "Statistics" : "Menu";
+
+                // kullanıcının son giriş yapma tarihinin güncellenmesi
+                user.LastLogin = DateTime.Now;
+                um.UpdateUser(user);
+
+                return Json(new { confirm = true, destination = Url.Action(action, controller) }, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception e)
+            else // kullanıcı yok veya şifresi yanlış ise
             {
-                ViewBag.exception = e.Message;
-                return RedirectToAction("LogIn");
+                return Json(new { confirm = false, destination = "" }, JsonRequestBehavior.AllowGet);
             }
         }
 
-
         public ActionResult LogOut()
         {
-            return RedirectToAction("Entry", "LogIn");
+            FormsAuthentication.SignOut();
+            Session.Remove("userID");
+            return RedirectToAction("LogIn", "LogIn");
         }
     }
 }

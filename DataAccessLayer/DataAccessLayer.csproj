@@ -74,13 +74,13 @@
     <Compile Include="EntityFramework\DalEfTable.cs" />
     <Compile Include="EntityFramework\DalEfTakeAway.cs" />
     <Compile Include="EntityFramework\DalEfUser.cs" />
-    <Compile Include="Migrations\202105302054510_mig.cs" />
-    <Compile Include="Migrations\202105302054510_mig.designer.cs">
-      <DependentUpon>202105302054510_mig.cs</DependentUpon>
+    <Compile Include="Migrations\202106121128191_mig.cs" />
+    <Compile Include="Migrations\202106121128191_mig.designer.cs">
+      <DependentUpon>202106121128191_mig.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202106061909325_add_statClass.cs" />
-    <Compile Include="Migrations\202106061909325_add_statClass.designer.cs">
-      <DependentUpon>202106061909325_add_statClass.cs</DependentUpon>
+    <Compile Include="Migrations\202106121131505_mig1.cs" />
+    <Compile Include="Migrations\202106121131505_mig1.designer.cs">
+      <DependentUpon>202106121131505_mig1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,11 +96,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202105302054510_mig.resx">
-      <DependentUpon>202105302054510_mig.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202106121128191_mig.resx">
+      <DependentUpon>202106121128191_mig.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202106061909325_add_statClass.resx">
-      <DependentUpon>202106061909325_add_statClass.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202106121131505_mig1.resx">
+      <DependentUpon>202106121131505_mig1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

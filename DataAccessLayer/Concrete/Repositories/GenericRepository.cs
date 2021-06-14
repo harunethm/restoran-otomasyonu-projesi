@@ -29,7 +29,7 @@ namespace DataAccessLayer.Concrete.Repositories
 
         public T Get(Expression<Func<T, bool>> filter)
         {
-            return _object.SingleOrDefault(filter);
+            return _object.FirstOrDefault(filter);
         }
 
         public void Insert(T p)
@@ -38,6 +38,8 @@ namespace DataAccessLayer.Concrete.Repositories
             entity.State = EntityState.Added;
             //_object.Add(p);
             c.SaveChanges();
+
+            return _object.Find(p);
         }
 
         public List<T> List()

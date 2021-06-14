@@ -35,10 +35,26 @@ namespace BusinessLayer.Concrete
             return _category.Get(x => x.CategoryID == id);
         }
 
+        public int IsCategoryExist(string categoryName)
+        {
+            Category _ = _category.Get(x => x.CategoryName == categoryName);
+            return _ != null ? _.CategoryID : 0;
+        }
+
         public void Delete(Category p)
         {
             p.Status = false;
             _category.Update(p);
+        }
+
+        public void UpdateCategory(Category p)
+        {
+            _category.Update(p);
+        }
+
+        public List<Category> GetForMenu()
+        {
+            return _category.List(x => x.Status && x.Products.Count(y => y.Status) > 0);
         }
     }
 }

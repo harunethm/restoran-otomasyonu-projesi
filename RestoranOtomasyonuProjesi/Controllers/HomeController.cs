@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace RestoranOtomasyonuProjesi.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly CategoryManager cm = new CategoryManager(new DalEfCategory());
@@ -16,7 +17,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
         [HttpGet]
         public ActionResult Menu()
         {
-            ViewBag.categories = cm.ListAll();
+            ViewBag.categories = cm.GetForMenu();
             ViewBag.products = pm.ListAll();
             return View();
         }

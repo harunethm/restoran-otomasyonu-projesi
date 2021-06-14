@@ -1,123 +1,125 @@
 ﻿@using EntityLayer.Concrete
 @{
     ViewBag.Title = "TableOrders";
-    //Table t = ViewBag.table;
-    List<Category> categories = ViewBag.categories;
-    List<Product> products = ViewBag.products;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 
-}
+    Table t = ViewBag.table;
+    List<Category> categories = ViewBag.categories;
+    List<Product> products = ViewBag.products;
 
-<br />
-<br />
+    User user = Session["userID"] as User;
+    if (user == null)
+    {
+        user = new User()
+        {
+            Name = "deneme",
+        };
+    }
+}
 
 <!--#region info menü-->
 <footer class="card-footer">
     <div class="container container-fluid col-lg-6 col-md-8">
         <div class="row">
             <!--bilgilendirme menüsü-->
-            <div class="text-lg-start col-4">Garson ismi</div>
-            <div class="text-lg-center col-4">Masa Numarası</div>
-            <div class="text-lg-end col-4">Tarih - saat</div>
+            <div class="text-start col-4">@user.Name</div>
+            <div class="text-center col-4">@t.Name</div>
+            <div class="text-end col-4">@DateTime.Now</div>
         </div>
     </div>
 </footer>
 <!--#endregion-->
 
-@*<form method="post" action="@Url.Action("TableOrder","Order")">*@
-    <div class="justify-content-center">
-        <!--#region menü-->
-        <div class="col-lg-6 col-md-8 container container-fluid">
-            @if (categories != null && products != null)
+<div class="justify-content-center">
+    <!--#region menü-->
+    <div class="clearfix"></div>
+
+    <div class="col-lg-6 col-md-8 container container-fluid">
+        @if (categories != null && products != null)
+        {
+            foreach (var category in categories)
             {
-                foreach (var category in categories)
-                {
-                    <br />
-                    <h4 class="text-center">@category.CategoryName</h4>
-                    <table class="table small">
-                        <tr>
-                            <th class="text-start">Sipariş Sil</th>
-                            <th class="text-center">Ürün Adı</th>
-                            <th class="text-center">Adet Fiyatı</th>
-                            <th class="text-center">Sipariş Adedi</th>
-                            <th class="text-end">Sipariş Ver</th>
-                        </tr>
-                        @foreach (var product in products)
+                <br />
+                <h4 class="text-center">@category.CategoryName</h4>
+                <table class="table small">
+                    <tr>
+                        <th class="text-start">Sipariş Azalt</th>
+                        <th class="text-center">Ürün Adı</th>
+                        <th class="text-center">Adet Fiyatı</th>
+                        <th class="text-center">Sipariş Adedi</th>
+                        <th class="text-end">Sipariş Ekle</th>
+                    </tr>
+                    @foreach (var product in products)
+                    {
+                        if (product.CategoryID == category.CategoryID && product.Status)
                         {
-                            if (product.CategoryID == category.CategoryID)
-                            {
-                                <tr>
-                                    <td class="col-1">
-                                        <button type="button" class="btn btn-danger float-start btnSiparis" id="btn_siparisAzalt_@product.ProductID" name="siparisAzalt" value="@product.ProductID">
-                                            -
-                                        </button>
-                                    </td>
-                                    <td class="text-center col-4">@product.Name</td>
-                                    <td class="text-center col-3">@product.Price TL</td>
-                                    <td class="text-center col-3">
-                                        <input type="number" class="form-control col-1 text-center" value="0" min=0 data-id="@product.ProductID" id="orderAmount_@product.ProductID" />
-                                    </td>
-                                    <td class="col-1">
-                                        <button type="button" class="btn btn-success float-end btnSiparis" id="btn_siparisArttir_@product.ProductID" name="siparisArttir" value="@product.ProductID">
-                                            +
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
+                            <tr>
+                                <td class="col-1">
+                                    <button type="button" class="btn btn-danger float-start btnSiparis" id="btn_siparisAzalt_@product.ProductID" name="siparisAzalt" value="@product.ProductID">
+                                        -
+                                    </button>
+                                </td>
+                                <td class="text-center col-4">@product.Name</td>
+                                <td class="text-center col-3">@product.Price TL</td>
+                                <td class="text-center col-3">
+                                    <input type="number" class="form-control col-1 text-center" value="0" min=0 data-id="@product.ProductID" id="orderAmount_@product.ProductID" />
+                                </td>
+                                <td class="col-1">
+                                    <button type="button" class="btn btn-success float-end btnSiparis" id="btn_siparisArttir_@product.ProductID" name="siparisArttir" value="@product.ProductID">
+                                        +
+                                    </button>
+                                </td>
+                            </tr>
                         }
-                    </table>
-                }
+                    }
+                </table>
             }
-        </div>
-        <!--#endregion-->
-        <div class="clearfix"></div>
-        <br />
-        <br />
-        <!--#region bottom navbar-->
-        <nav class="navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-bottom bg-dark">
-            <div class="container container-fluid">
-
-                <button class="navbar-toggler m-auto" type="button" data-bs-toggle="collapse" data-bs-target="#secenekler">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="col-lg-6 col-md-8 collapse navbar-collapse justify-content-around" id="secenekler">
-                    <!--sepeti görüntüle => popup, siparişi onayla, siparişi iptal et-->
-                    <ul class="navbar-nav align-items-center">
-                        <li class="nav-item">
-                            <button type="reset" class="btn btn-outline-danger m-2" name="_button">
-                                <i class="fas fa-times"></i>
-                                İptal
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="btn btn-outline-primary m-2" name="_button" value="odemeAl">
-                                <i class="fas fa-wallet"></i>
-                                Ödeme Al
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="btn btn-outline-primary m-2" type="button" data-bs-toggle="modal" data-bs-target="#sepet" name="_button">
-                                <i class="fas fa-shopping-cart"></i>
-                                Sepet
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="btn btn-outline-success m-2" name="_button">
-                                <i class="fas fa-check"></i>
-                                Onayla
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!--#endregion-->
+        }
     </div>
-@*</form>*@
+    <!--#endregion-->
+    <br />
+    <br />
+    <br />
+    <div class="clearfix"></div>
+
+    <!--#region bottom navbar-->
+    <nav class="navbar navbar-expand-lg navbar-expand-md navbar-dark fixed-bottom bg-dark mt-auto">
+        <div class="container container-fluid">
+            <button class="navbar-toggler navbar-dark m-auto" type="button" data-bs-toggle="collapse" data-bs-target="#secenekler">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="col-lg-6 col-md-8 collapse navbar-collapse justify-content-around" id="secenekler">
+
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-danger m-2" name="btn_iptal">
+                            <i class="fas fa-times"></i>
+                            İptal
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-primary m-2" type="button" data-bs-toggle="modal" data-bs-target="#sepet" id="tableInfo">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sepet
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="btn btn-outline-success m-2" name="btn_onayla">
+                            <i class="fas fa-check"></i>
+                            Onayla
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--#endregion-->
+</div>
 <!--#region Modal Sepet-->
 <div class="modal fade" id="sepet" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg  modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -126,20 +128,24 @@
             </div>
 
             <div class="modal-body">
-                <table class="table">
-                    <tr>
-                        <th class="text-start col-4">Ürün Adı</th>
-                        <th class="text-center col-4">Sipariş Adedi</th>
-                        <th class="text-end col-4">Birim Fiyatı</th>
-                    </tr>
-                    @*<tr>
-                            @foreach (var product in sepettekiler)
-                            {
-                                <td class="text-start col-4">@product.Name</td>
-                                <td class="text-center col-4">@product.Amount</td>
-                                <td class="text-end col-4">@product.Price TL</td>
-                            }
-                        </tr>*@
+                <table class="table" id="cart">
+                    <thead>
+                        <tr>
+                            <th class="text-start col-4">Ürün Adı</th>
+                            <th class="text-center col-4">Sipariş Adedi</th>
+                            <th class="text-end col-4">Birim Fiyatı</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*<tr>
+                                @foreach (var product in sepettekiler)
+                                {
+                                    <td class="text-start col-4">@product.Name</td>
+                                    <td class="text-center col-4">@product.Amount</td>
+                                    <td class="text-end col-4">@product.Price TL</td>
+                                }
+                            </tr>*@
+                    </tbody>
                 </table>
             </div>
 
@@ -168,5 +174,40 @@
         var value = parseInt($('#orderAmount').val()) + 1;
         $('#orderAmount').val(value);
     });
+
+    $('#tableInfo').click(function () {
+        var id = @t.TableID;
+        console.log(id);
+        var url = "@Url.Action("TableInfo", "Order")";
+        var data = "id:"+id;
+        $('.sepet').remove();
+        ajax(url, data, function (data) {
+            var orders = data.orders;
+            for (var i = 0; i < orders.length; i+=3) {
+                var tableData = '<tr class="sepet">' +
+                    '<td class="text-start col-4">' + orders[i]+'</td>' +
+                    '<td class="text-center col-4">' + orders[i+1]+'</td>' +
+                    '<td class="text-end col-4">' + orders[i+2]+' TL</td>' +
+                                '</tr>';
+                $('#cart > tbody:last-child').append(tableData);
+            }
+
+        }, function (data) {
+                console.log("error");
+        });
+    });
+
+
+    function ajax(url, data, success, error) {
+        $.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            data: "{" + data + "}",
+            contentType: 'application/json; charset=utf-8',
+            success: success,
+            error: error,
+        });
+    }
 
 </script>

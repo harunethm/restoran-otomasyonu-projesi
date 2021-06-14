@@ -7,7 +7,6 @@
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 
-<br />
 
 <div class="justify-content-center">
     <div class="col-lg-6 col-md-8 container container-fluid">
@@ -16,7 +15,6 @@
         {
             if (category.Status)
             {
-                <br />
                 <h4 class="text-center">@category.CategoryName</h4>
                 <table class="table small">
                     <tr>
@@ -25,7 +23,7 @@
                     </tr>
                     @foreach (var product in products)
                     {
-                        if (product.CategoryID == category.CategoryID)
+                        if (product.CategoryID == category.CategoryID && product.Status)
                         {
                             <tr>
                                 <td class="text-start col-4">@product.Name</td>
@@ -34,6 +32,7 @@
                         }
                     }
                 </table>
+                <br />
             }
         }
     </div>

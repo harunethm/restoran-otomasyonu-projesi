@@ -18,7 +18,7 @@ namespace EntityLayer.Concrete
         [StringLength(100)] // Sipariş verilen ürün için açıklama
         public string Description { get; set; }
 
-        // Siparişin; sepette mi(0), onaylanmış(1) mı, hazır(2) mı, yoksa geçmiş sipariş(3) mi olduğu bilgisi
+        // Siparişin; sepette mi(0), onaylanmış(1) mı, hazır(2) mı, yoksa geçmiş sipariş(3), iptal edilmiş(4) mi olduğu bilgisi
         public int Status { get; set; }
 
         // Siparişin verildiği tarih ve saat

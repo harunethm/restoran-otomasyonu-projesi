@@ -2,23 +2,25 @@
 @{
     ViewBag.Title = "CashRegister";
     List<CashRegister> cashRegisters = ViewBag.cashRegisters;
+    bool day = ViewBag.day;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-
-<span class="fs-2">Kategoriler</span>
-<button class="btn btn-success float-end">
+<button class="btn @(day ? "btn-danger" : "btn-success") float-end m-2" id="btn" data-bs-toggle="modal" data-bs-target="#eminMisiniz">
     <i class="fas fa-flag" id="btn_icon"></i>
-    Günü Başlat
+    @(day ? "Günü Bitir" : "Günü Başlat")
 </button>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-responsive">
     <thead>
         <tr class="text-center">
-            <th class="col-1">Tarih</th>
+            <th>Günün Tarihi</th>
+            <th>Günün Başlangıcı</th>
+            <th>Günün Bitişi</th>
             <th>Kazanç</th>
             <th>İkramlar</th>
             <th>İndirimler</th>
+            <th>#</th>
 
         </tr>
     </thead>
@@ -30,18 +32,20 @@
                 if (cashRegister.Status)
                 {
                     <tr class="text-center">
-                        <td>@cashRegister.DateTime.ToShortDateString()</td>
+                        <td>@cashRegister.DayStart.ToShortDateString()</td>
+                        <td>@cashRegister.DayStart.ToString("H:mm")</td>
+                        <td>-</td>
                         <td>@cashRegister.AmountEarned TL</td>
                         <td>@cashRegister.AmountServed TL</td>
                         <td>@cashRegister.AmountDiscount TL</td>
                         <td>
-                            <span class="badge bg-success">Aktif</span>
+                            <span class="badge bg-success">Aktif Kasa</span>
                         </td>
                     </tr>
                 }
             }
             <tr>
-                <td colspan="5">
+                <td colspan="7">
                     <br />
                 </td>
             </tr>
@@ -50,12 +54,14 @@
                 if (!cashRegister.Status)
                 {
                     <tr class="text-center">
-                        <td>@cashRegister.DateTime.ToShortDateString()</td>
+                        <td>@cashRegister.DayStart.ToShortDateString()</td>
+                        <td>@string.Format("{0:t}", cashRegister.DayStart)</td>
+                        <td>@string.Format("{0:t}", cashRegister.DayEnd)</td>
                         <td>@cashRegister.AmountEarned TL</td>
                         <td>@cashRegister.AmountServed TL</td>
                         <td>@cashRegister.AmountDiscount TL</td>
                         <td>
-                            <span class="badge bg-danger">Deaktif</span>
+                            <span class="badge bg-warning">Geçmiş Kasa</span>
                         </td>
                     </tr>
                 }
@@ -69,3 +75,65 @@
         }
     </tbody>
 </table>
+<!--#region emin misiniz-->
+<div class="modal fade" id="eminMisiniz">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Emin Misiniz?</h4>
+            </div>
+
+            <div class="modal-body">
+                <p id="modalBody"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">İptal</button>
+                <button class="btn btn-success" id="confirm">Onayla</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+
+
+<script type="text/javascript">
+    $('document').ready(function () {
+
+        $('#btn').on('click', function () {
+            if ($(this).hasClass('btn-success')) {
+                $('#modalBody').text('Günü başlatmak istediğinize emin misiniz?')
+            } else if ($(this).hasClass('btn-danger')){
+                $('#modalBody').text('Günü bitirmek istediğinize emin misiniz?')
+            }
+        });
+
+        $('#confirm').click(function () {
+             var url = "@Url.Action("DayStatusChange", "Admin")";
+            var data = "";
+            ajax(url, data);
+
+        });
+
+        function ajax(url, data) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: "{" + data + "}",
+                contentType: 'application/json; charset=utf-8',
+                success: function (fdata) {
+                    if (fdata.confirm)
+                        location.reload();
+                    else {
+                        alert(fdata.errMessage);
+
+                    }
+                },
+                error: function (fdata) {
+                    console.log(fdata.error);
+                }
+            });
+        };
+    });
+</script>

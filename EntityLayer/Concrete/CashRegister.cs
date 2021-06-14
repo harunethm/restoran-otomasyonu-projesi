@@ -12,8 +12,11 @@ namespace EntityLayer.Concrete
         [Key]
         public int CashRegisterID { get; set; }
 
-        // Bu günün tarihi
-        public DateTime DateTime { get; set; }
+        // Günün başlangıç saati
+        public DateTime DayStart { get; set; }
+
+        // Günün bitiş saati
+        public DateTime? DayEnd { get; set; }
 
         // Gün başlangıcı yapılıp yapılmadığı
         public bool Status { get; set; }

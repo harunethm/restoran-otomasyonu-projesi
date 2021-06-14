@@ -13,7 +13,6 @@ namespace BusinessLayer.ValidationRules
     {
         public UserValidator()
         {
-            RuleFor(x => x.AuthorityLevel).LessThan(3);
             RuleFor(x => x.PhoneNumber.Length).Equal(10);
         }
     }

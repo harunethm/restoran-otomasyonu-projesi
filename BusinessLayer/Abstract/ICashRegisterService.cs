@@ -12,6 +12,8 @@ namespace BusinessLayer.Abstract
         List<CashRegister> ListAll();
         void AddCashRegister(CashRegister p);
         CashRegister GetByID(int p);
-
+        void DayStatusChange();
+        void Update(CashRegister p);
+        CashRegister IsDayStarted();
     }
 }
