@@ -16,7 +16,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
 
         public ActionResult Settings()
         {
-            User user = Session["userID"] as User;
+            User user = Session["user"] as User;
             int id = user.UserID;
             ViewBag.user = um.GetByID(id);
             return View();
@@ -43,7 +43,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
 
         public ActionResult IsUserAdmin()
         {
-            User user = Session["userID"] as User;
+            User user = Session["user"] as User;
             if (um.GetByID(user.UserID) != null)
                 return um.GetByID(user.UserID).Role == "admin" ? Json(new { confirm = true }, JsonRequestBehavior.AllowGet) : Json(new { confirm = false }, JsonRequestBehavior.AllowGet);
             else

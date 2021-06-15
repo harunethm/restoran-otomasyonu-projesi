@@ -7,9 +7,9 @@
     double totalPrice = ViewBag.totalPrice;
 }
 
-
+<div class="container container-fluid">
     <div class="row p-3">
-        <div class="col-5 pe-2">
+        <div class="col-7 pe-2">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -23,25 +23,24 @@
                 <tbody>
                     @foreach (var order in orders)
                     {
-                        if (order.Status == 1)
+                        if (order.Status == 2)
                         {
-
-                        }
-                        for (int i = 0; i < order.Amount; i++)
-                        {
-                            <tr>
-                                <td>
-                                    <input type="checkbox" class="form-check cb_orders" data-price="@order.Product.Price"/>
-                                </td>
-                                <td class="text-center">@order.Product.Name</td>
-                                <td class="text-end">@order.Product.Price</td>
-                            </tr>
+                            for (int i = 0; i < order.Amount - order.AmountPaid; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="form-check cb_orders" data-id="@order.OrderID" data-price="@order.Product.Price"/>
+                                    </td>
+                                    <td class="text-center">@order.Product.Name</td>
+                                    <td class="text-end">@order.Product.Price</td>  
+                                </tr>
+                            }
                         }
                     }
                 </tbody>
             </table>
         </div>
-        <div class="col-7 ps-2">
+        <div class="col-5 ps-2">
             <div class="form-group">
                 <label for="totalPrice">Seçilen Ürünlerin Toplam Tutarı:</label>
                 <div class="input-group">
@@ -76,6 +75,7 @@
             <button class="btn btn-primary float-end">Öde</button>
         </div>
     </div>
+</div>
 
 <script type="text/javascript">
 
@@ -84,6 +84,7 @@
     });
 
     $("#checkAll").click(function () {
+        console.log("1");
         $('.cb_orders').prop('checked', this.checked);
 
         if (this.checked)
@@ -92,20 +93,44 @@
             $('#totalPrice').val("0");
     });
 
-    $('.cb_orders').change(function () {
-        var price = this.attributes["data-price"].value;
-        console.log(this);
-        console.log(price);
+    $('.cb_orders').click(function () {
+        console.log("2");
+
+        var price = $(this).data('price');
         if (this.checked)
             $('#totalPrice').val(parseInt($('#totalPrice').val()) + parseInt(price));
         else
             $('#totalPrice').val(parseInt($('#totalPrice').val()) - parseInt(price));
     });
 
-    $("tr").click(function () {
-        var checkbox = $(this).find("input[type='checkbox']");
-        checkbox.attr('checked', !checkbox.attr('checked'));
-        $(checkbox).trigger("change");
+    $('tbody tr').click(function (event) {
+        if (event.target.type !== 'checkbox') {
+            $(':checkbox', this).trigger('click');
+        }
     });
+
+    $(document).ready(function() {
+        $("html").dblclick(function () {
+            var id = new Array();
+            $(".cb_orders:checked").each(function () {
+
+                id.push($(this).attr("data-id"));
+            });
+
+
+            $.ajax({
+                url: "@Url.Action("DiziAl", "Payment")",
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(id),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) { },
+                error: function (e) { },
+            });
+        });
+
+
+    });
+
 
 </script>

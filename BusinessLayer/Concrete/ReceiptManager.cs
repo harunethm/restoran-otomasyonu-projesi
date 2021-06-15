@@ -32,5 +32,15 @@ namespace BusinessLayer.Concrete
         {
             return _receipt.Get(x => x.ReceiptID == id);
         }
+
+        public Receipt GetLast()
+        {
+            return _receipt.List().LastOrDefault();
+        }
+
+        public void Update(Receipt p)
+        {
+            _receipt.Update(p);
+        }
     }
 }

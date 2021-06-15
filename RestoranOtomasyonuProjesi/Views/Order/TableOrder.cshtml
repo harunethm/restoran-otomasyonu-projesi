@@ -6,8 +6,8 @@
     Table t = ViewBag.table;
     List<Category> categories = ViewBag.categories;
     List<Product> products = ViewBag.products;
-
-    User user = Session["userID"] as User;
+    List<Order> orders = ViewBag.orders;
+    User user = Session["user"] as User;
     if (user == null)
     {
         user = new User()
@@ -15,6 +15,7 @@
             Name = "deneme",
         };
     }
+    Console.WriteLine(orders);
 }
 
 <!--#region info menü-->
@@ -55,17 +56,17 @@
                         {
                             <tr>
                                 <td class="col-1">
-                                    <button type="button" class="btn btn-danger float-start btnSiparis" id="btn_siparisAzalt_@product.ProductID" name="siparisAzalt" value="@product.ProductID">
+                                    <button type="button" class="btn btn-danger float-start btnSiparis" data-id="@product.ProductID" data-type="minus">
                                         -
                                     </button>
                                 </td>
                                 <td class="text-center col-4">@product.Name</td>
-                                <td class="text-center col-3">@product.Price TL</td>
+                                <td class="text-center col-3">@product.Price.ToString() TL</td>
                                 <td class="text-center col-3">
-                                    <input type="number" class="form-control col-1 text-center" value="0" min=0 data-id="@product.ProductID" id="orderAmount_@product.ProductID" />
+                                    <input type="number" class="form-control col-1 text-center inputSiparis" value=0 min=0 data-id="@product.ProductID" />
                                 </td>
                                 <td class="col-1">
-                                    <button type="button" class="btn btn-success float-end btnSiparis" id="btn_siparisArttir_@product.ProductID" name="siparisArttir" value="@product.ProductID">
+                                    <button type="button" class="btn btn-success float-end btnSiparis" data-id="@product.ProductID" data-type="plus">
                                         +
                                     </button>
                                 </td>
@@ -93,7 +94,7 @@
 
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item">
-                        <button class="btn btn-outline-danger m-2" name="btn_iptal">
+                        <button class="btn btn-outline-danger m-2 btnConfirmCancel" data-status="4">
                             <i class="fas fa-times"></i>
                             İptal
                         </button>
@@ -106,7 +107,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <button class="btn btn-outline-success m-2" name="btn_onayla">
+                        <button class="btn btn-outline-success m-2 btnConfirmCancel" data-status="1">
                             <i class="fas fa-check"></i>
                             Onayla
                         </button>
@@ -152,7 +153,7 @@
             <div class="modal-footer">
                 <h5 class="me-auto">
                     Toplam Fiyat :
-                    <span class="badge bg-success">150 TL</span>
+                    <span class="badge bg-success" id="spanTotalPrice">150 TL</span>
                 </h5>
                 <button class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Kapat</button>
             </div>
@@ -164,36 +165,99 @@
 
 <script type="text/javascript">
 
-    $('.btnSiparis').on('click', function () {
-        var valu = (parseInt($('#orderAmount').val()) + 1);
-        $('#orderAmount').val(valu);
-        console.log(valu);
+    ajax('@Url.Action("GetInCart", "Order")', "receiptID:" + @((int)t.ReceiptID) , function (fdata) {
+        console.log(fdata.orders);
+        for (var i = 0; i < fdata.orders.length; i += 2) {
+            $('.inputSiparis[data-id=' + fdata.orders[i] + ']').val(fdata.orders[i+1]);
+        }
+    }, function (fdata) {
+
     });
 
-    $('#btn_siparisAzalt').click(function () {
-        var value = parseInt($('#orderAmount').val()) + 1;
-        $('#orderAmount').val(value);
-    });
+    $('document').ready(function () {
 
-    $('#tableInfo').click(function () {
-        var id = @t.TableID;
-        console.log(id);
-        var url = "@Url.Action("TableInfo", "Order")";
-        var data = "id:"+id;
-        $('.sepet').remove();
-        ajax(url, data, function (data) {
-            var orders = data.orders;
-            for (var i = 0; i < orders.length; i+=3) {
-                var tableData = '<tr class="sepet">' +
-                    '<td class="text-start col-4">' + orders[i]+'</td>' +
-                    '<td class="text-center col-4">' + orders[i+1]+'</td>' +
-                    '<td class="text-end col-4">' + orders[i+2]+' TL</td>' +
-                                '</tr>';
-                $('#cart > tbody:last-child').append(tableData);
-            }
+        var beforeVal = 0;
+        var afterVal = 0;
 
-        }, function (data) {
+
+        $('.btnConfirmCancel').click(function () {
+            var status = $(this).data('status');
+            var tableID = '@(t.TableID)';
+            var data = "tableID:" + tableID + ",status:" + status;
+            ajax('@Url.Action("ConfirmCancelOrder", "Order")', data, function (fdata) {
+                if(fdata.confirm)
+                    window.location.href = '@Url.Action("Tables", "Order")'
+                else
+                    console.log(fdata.errMessage);
+            }, function () {
+
+            });
+        });
+
+        $('.btnSiparis').on('click', function () {
+            var productID = $(this).data('id');
+            var type = $(this).data('type') == 'plus' ? true : false;
+
+            var url = '@Url.Action("OrderPlusMinus", "Order")';
+            var data = "productID:" + productID + ",receiptID:" + @((int)t.ReceiptID) + ",amount:0,amountInput:false,plusMinus:" + type;
+            ajax(url, data, function (fdata) {
+                if (!fdata.confirm)
+                    console.log(fdata.errMessage);
+                else if (fdata.confirm) {
+                    $('.inputSiparis[data-id=' + productID + ']').val(fdata.newAmount);
+                }
+            }, function (data) {
                 console.log("error");
+            });
+        });
+
+        $('.inputSiparis').focusin(function () {
+            beforeVal = $(this).val();
+        });
+        $('.inputSiparis').focusout(function () {
+            afterVal = $(this).val();
+            if (afterVal != beforeVal) {
+                var productID = $(this).data('id');
+
+            var url = '@Url.Action("OrderPlusMinus", "Order")';
+                var data = "productID:" + productID + ",receiptID:" + @((int)t.ReceiptID) + ",amount:"+$(this).val()+",amountInput:true,plusMinus:" + true;
+            ajax(url, data, function (fdata) {
+                if (!fdata.confirm)
+                    console.log(fdata.errMessage);
+                else if (fdata.confirm) {
+                    $('.inputSiparis[data-id=' + productID + ']').val(fdata.newAmount);
+                }
+            }, function (data) {
+                console.log("error");
+            });
+            }
+        });
+
+        $('#tableInfo').click(function () {
+            var url = "@Url.Action("TableInfo", "Order")";
+            var data = "id:"+@((int)t.ReceiptID) + ",durum:0";
+            ajax(url, data, function (data) {
+                var orders = data.orders;
+                var total = 0;
+                console.log(orders);
+                for (var i = 0; i < orders.length; i+=3) {
+                    var tableData = '<tr class="sepet">' +
+                        '<td class="text-start col-4">' + orders[i]+'</td>' +
+                        '<td class="text-center col-4">' + orders[i+1]+'</td>' +
+                        '<td class="text-end col-4">' + orders[i+2]+' TL</td>' +
+                        '</tr>';
+                    total += parseFloat(orders[i + 2]);
+                    $('#cart > tbody:last-child').append(tableData);
+                }
+                $('#spanTotalPrice').html(total + " TL");
+
+            }, function (data) {
+                console.log("error");
+            });
+        });
+
+        $('#sepet').on('hide.bs.modal', function () {
+            $('.sepet').remove();
         });
     });
 

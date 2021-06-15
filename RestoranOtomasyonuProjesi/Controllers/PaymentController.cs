@@ -27,5 +27,16 @@ namespace RestoranOtomasyonuProjesi.Controllers
             ViewBag.orders = orders;
             return View();
         }
+
+        public ActionResult Pay()
+        {
+            return Json(new { }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DiziAl(int[] dizi)
+        {
+            var x = dizi;
+            return Json(new { }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

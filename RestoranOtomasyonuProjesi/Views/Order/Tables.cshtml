@@ -34,7 +34,7 @@
 
                                     @if (table.Availability == 1)
                                     {
-                                        <a class="tableInfo fs-5" data-bs-toggle="modal" data-bs-target="#sepet" data-id="@table.TableID">
+                                        <a class="tableInfo fs-5" data-bs-toggle="modal" data-bs-target="#sepet" data-id="@table.ReceiptID">
                                             <i class="fas fa-info-circle"></i>
                                         </a>
                                     }
@@ -103,6 +103,7 @@
                         <tr>
                             <th class="text-start col-4">Ürün Adı</th>
                             <th class="text-center col-4">Sipariş Adedi</th>
+                            <th class="text-center col-4">Sipariş Durumu</th>
                             <th class="text-end col-4">Birim Fiyatı</th>
                         </tr>
                     </thead>
@@ -122,7 +123,7 @@
             <div class="modal-footer">
                 <h5 class="me-auto">
                     Toplam Tutar :
-                    <span class="badge bg-success">150 TL</span>
+                    <span class="badge bg-success" id="spanTotalPrice">150 TL</span>
                 </h5>
                 <button class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Kapat</button>
             </div>
@@ -153,8 +154,6 @@
                     break;
                 case 2:
                     $('.btnTableOptions[data-type="rezervation"]').attr('hidden', true);
-                    $('.btnTableOptions[data-type="payment"]').attr('hidden', true);
-                    break;
                 default:
                     break;
             }
@@ -181,22 +180,32 @@
             e.stopPropagation();
             var id = $(this).data('id');
             var url = "@Url.Action("TableInfo", "Order")";
-            var data = "id:"+id;
-            $('.sepet').remove();
+            var data = "id:"+id+",durum:1";
             ajax(url, data, function (data) {
                 var orders = data.orders;
-                for (var i = 0; i < orders.length; i+=3) {
+                console.log(orders);
+                var total = 0;
+                for (var i = 0; i < orders.length; i += 4) {
                     var tableData = '<tr class="sepet">' +
-                        '<td class="text-start col-4">' + orders[i]+'</td>' +
-                        '<td class="text-center col-4">' + orders[i+1]+'</td>' +
-                        '<td class="text-end col-4">' + orders[i+2]+' TL</td>' +
-                                    '</tr>';
+                        '<td class="text-start col-3">' + orders[i]+'</td>' +
+                        '<td class="text-center col-3">' + orders[i+1]+'</td>' +
+                        '<td class="text-center col-3"><span class="badge ' + (orders[i+2] == 1 ? 'bg-info' : 'bg-success') + '">' + (orders[i+2] == 1 ? 'Hazırlanıyor' : 'Hazır' )+'</span></td>' +
+                        '<td class="text-end col-3">' + orders[i+3] +' TL</td>' +
+                            '</tr>';
+                    console.log(tableData);
+                    console.log(" ");
                     $('#cart > tbody:last-child').append(tableData);
+                    total += (parseFloat(orders[i+3]) * parseFloat(orders[i+1]));
                 }
+                $('#spanTotalPrice').html(total + " TL");
 
             }, function (data) {
                     console.log("error");
             });
+        });
+
+        $('#sepet').on('hide.bs.modal', function () {
+            $('.sepet').remove();
         });
     });
 

@@ -38,7 +38,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
             if (user != null && user.Password.Equals(password)) 
             {
                 FormsAuthentication.SetAuthCookie(user.PhoneNumber, false);
-                Session["userID"] = user;
+                Session["user"] = user;
 
                 // admin ise admin controller'a değilse home controller'a
                 string controller = user.Role == "admin" ? "Admin" : "Home";

@@ -14,6 +14,7 @@ namespace BusinessLayer.Abstract
         Order GetByID(int p);
         List<Order> GetByReceiptID(int p);
         void Update(Order p);
-
+        List<Order> GetForOrdersPage();
+        List<Order> GetForOrdersPage(int p);
     }
 }
