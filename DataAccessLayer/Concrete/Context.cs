@@ -20,5 +20,6 @@ namespace DataAccessLayer.Concrete
         public DbSet<TakeAway> TakeAways { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Statistic> Statistics { get; set; }
+        public DbSet<Payment> Payments { get; set; }
     }
 }

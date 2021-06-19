@@ -18,8 +18,8 @@ namespace EntityLayer.Concrete
         // Yapılan indirim
         public double Discount { get; set; }
 
-        // Ödeme türü; ödenmemiş ise => 0, nakit ödenmiş ise => 1, kredi kartı ile ödenmiş ise => 2
-        public int PaymentMethod { get; set; }
+        // ödenen miktar
+        public double Paid { get; set; }
 
         // Fatura oluşturulma tarihi ve zamanı
         public DateTime ReceiptDate { get; set; }
@@ -32,5 +32,6 @@ namespace EntityLayer.Concrete
         public ICollection<TakeAway> TakeAways { get; set; }
 
         public ICollection<Order> Orders { get; set; }
+
     }
 }

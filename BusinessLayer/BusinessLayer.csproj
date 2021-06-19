@@ -59,6 +59,7 @@
     <Compile Include="Abstract\ICashRegisterService.cs" />
     <Compile Include="Abstract\ICategoryService.cs" />
     <Compile Include="Abstract\IOrderService.cs" />
+    <Compile Include="Abstract\IPaymentService.cs" />
     <Compile Include="Abstract\IProductService.cs" />
     <Compile Include="Abstract\IReceiptService.cs" />
     <Compile Include="Abstract\IReservationService.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Concrete\CashRegisterManager.cs" />
     <Compile Include="Concrete\CategoryManager.cs" />
     <Compile Include="Concrete\OrderManager.cs" />
+    <Compile Include="Concrete\PaymentManager.cs" />
     <Compile Include="Concrete\ProductManager.cs" />
     <Compile Include="Concrete\ReceiptManager.cs" />
     <Compile Include="Concrete\ReservationManager.cs" />

@@ -28,7 +28,12 @@ namespace BusinessLayer.Concrete
             p.Status = false;
             _user.Update(p);
         }
-        
+
+        public int GetAdminCount()
+        {
+            return _user.List().Count(x => x.Role == "admin" && x.Status == true);
+        }
+
         public User GetByID(int id)
         {
             return _user.Get(x => x.UserID == id);

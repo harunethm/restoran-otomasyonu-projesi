@@ -10,10 +10,10 @@ namespace BusinessLayer.Abstract
     public interface IOrderService
     {
         void AddOrder(Order p);
-        List<Order> ListAll();
-        Order GetByID(int p);
-        List<Order> GetByReceiptID(int p);
         void Update(Order p);
+        Order GetByID(int p);
+        List<Order> ListAll();
+        List<Order> GetByReceiptID(int p);
         List<Order> GetForOrdersPage();
         List<Order> GetForOrdersPage(int p);
     }

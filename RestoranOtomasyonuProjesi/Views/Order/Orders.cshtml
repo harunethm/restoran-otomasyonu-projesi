@@ -1,22 +1,59 @@
 ﻿@using EntityLayer.Concrete
 @{
     ViewBag.Title = "Orders";
-    //Table t = ViewBag.table;
-    //List<Category> categories = ViewBag.categories;
-    //List<Product> products = ViewBag.products;
 
     List<Order> orders = ViewBag.orders;
-    //List<Order> takeAways = ViewBag.takeAways;
+    List<TakeAway> takeAways = ViewBag.takeAways;
     List<Table> tables = ViewBag.tables;
 
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 
 }
 
-@*<form method="post" action="@Url.Action("Orders","Order")">*@
 <div class="align-content-center">
     <div class="container container-fluid" style="min-width:460px">
         <br />
+        @foreach (var takeAway in takeAways)
+        {
+            <table class="table table-bordered table-sm">
+                <tr>
+                    <th class="col-2">Sipariş Saati</th>
+                    <th class="col-2">Ürün</th>
+                    <th class="col-2">Adet</th>
+                    <th class="col-2">Durumu</th>
+                    <th class="col-1">Hazır & Teslim</th>
+                    <th class="col-1">İptal Et</th>
+                </tr>
+                @foreach (var order in orders)
+                {
+                    if (order.ReceiptID == takeAway.ReceiptID)
+                    {
+                        <tr>
+                            <td>@string.Format("{0:t}", order.OrderDate)</td>
+                            <td>@order.Product.Name</td>
+                            <td>@order.Amount</td>
+
+                            <td>
+                                <span class="badge @(order.Status == 1 ? "bg-info" : "bg-success")">@(order.Status == 1 ? "Hazırlanıyor" : "Hazır")</span>
+                            </td>
+
+                            <td>
+                                <button class="btn btn-sm btn-success btnStatusChangeTA" data-status="3" data-id="@order.OrderID">
+                                    <i class="fas fa-check me-1"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger btnStatusChangeTA" data-status="4" data-id="@order.OrderID" @(order.Status == 1 ? "" : "disabled")>
+                                    <i class="fas fa-times me-1"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+            <br />
+        }
+
         @foreach (var table in tables)
         {
             <h3>@table.Name</h3>
@@ -32,10 +69,10 @@
                 </tr>
                 @foreach (var order in orders)
                 {
-                    if (order.ReceiptID == table.ReceiptID && (order.Status == 1 || order.Status == 2))
+                    if (order.ReceiptID == table.ReceiptID)
                     {
                         <tr>
-                            <td>@order.OrderDate.TimeOfDay</td>
+                            <td>@string.Format("{0:t}", order.OrderDate)</td>
                             <td>@order.Product.Name</td>
                             <td>@order.Amount</td>
 
@@ -65,7 +102,6 @@
         }
     </div>
 </div>
-@*</form>*@
 
 <!--#region Modal Edit Order-->
 <div class="modal fade" id="editOrder" tabindex="-1">
@@ -123,7 +159,11 @@
         ajax(url, data, true);
     });
 
-
+    $('.btnStatusChangeTA').click(function () {
+        var url = "@Url.Action("TAStatusChange", "Order")"
+        var data = "id:" + $(this).data('id') + ",status:" + $(this).data('status');
+        ajax(url, data, true);
+    });
 
     function ajax(url, data, reload) {
         $.ajax({

@@ -27,5 +27,20 @@ namespace BusinessLayer.Concrete
         {
             _takeAway.Insert(p);
         }
+
+        public TakeAway GetByReceiptID(int p)
+        {
+            return _takeAway.Get(x => x.ReceiptID == p);
+        }
+
+        public void Update(TakeAway p)
+        {
+            _takeAway.Update(p);
+        }
+
+        public List<TakeAway> GetForOrdersPage()
+        {
+            return _takeAway.List(x => x.Receipt.Orders.Count(y => y.Status == 1) > 0);
+        }
     }
 }

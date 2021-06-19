@@ -54,6 +54,7 @@
     <Compile Include="Abstract\ICashRegister.cs" />
     <Compile Include="Abstract\ICategory.cs" />
     <Compile Include="Abstract\IOrder.cs" />
+    <Compile Include="Abstract\IPayment.cs" />
     <Compile Include="Abstract\IProduct.cs" />
     <Compile Include="Abstract\IReceipt.cs" />
     <Compile Include="Abstract\IRepository.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="EntityFramework\DalEfCashRegister.cs" />
     <Compile Include="EntityFramework\DalEfCategory.cs" />
     <Compile Include="EntityFramework\DalEfOrder.cs" />
+    <Compile Include="EntityFramework\DalEfPayment.cs" />
     <Compile Include="EntityFramework\DalEfProduct.cs" />
     <Compile Include="EntityFramework\DalEfReceipt.cs" />
     <Compile Include="EntityFramework\DalEfReservation.cs" />
@@ -81,6 +83,38 @@
     <Compile Include="Migrations\202106121131505_mig1.cs" />
     <Compile Include="Migrations\202106121131505_mig1.designer.cs">
       <DependentUpon>202106121131505_mig1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106151156480_new_PaymentTable.cs" />
+    <Compile Include="Migrations\202106151156480_new_PaymentTable.designer.cs">
+      <DependentUpon>202106151156480_new_PaymentTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106151202535_edit_paymentClass.cs" />
+    <Compile Include="Migrations\202106151202535_edit_paymentClass.designer.cs">
+      <DependentUpon>202106151202535_edit_paymentClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106151204243_edit_paymentClass1.cs" />
+    <Compile Include="Migrations\202106151204243_edit_paymentClass1.designer.cs">
+      <DependentUpon>202106151204243_edit_paymentClass1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106151223257_edit_receiptClass.cs" />
+    <Compile Include="Migrations\202106151223257_edit_receiptClass.designer.cs">
+      <DependentUpon>202106151223257_edit_receiptClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106151226281_edit_paymentClass2.cs" />
+    <Compile Include="Migrations\202106151226281_edit_paymentClass2.designer.cs">
+      <DependentUpon>202106151226281_edit_paymentClass2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106181643405_edit_takeAway.cs" />
+    <Compile Include="Migrations\202106181643405_edit_takeAway.designer.cs">
+      <DependentUpon>202106181643405_edit_takeAway.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106181749156_add_paymentDateTime.cs" />
+    <Compile Include="Migrations\202106181749156_add_paymentDateTime.designer.cs">
+      <DependentUpon>202106181749156_add_paymentDateTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106181751006_edit_paymentDateTime.cs" />
+    <Compile Include="Migrations\202106181751006_edit_paymentDateTime.designer.cs">
+      <DependentUpon>202106181751006_edit_paymentDateTime.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,6 +135,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202106121131505_mig1.resx">
       <DependentUpon>202106121131505_mig1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106151156480_new_PaymentTable.resx">
+      <DependentUpon>202106151156480_new_PaymentTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106151202535_edit_paymentClass.resx">
+      <DependentUpon>202106151202535_edit_paymentClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106151204243_edit_paymentClass1.resx">
+      <DependentUpon>202106151204243_edit_paymentClass1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106151223257_edit_receiptClass.resx">
+      <DependentUpon>202106151223257_edit_receiptClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106151226281_edit_paymentClass2.resx">
+      <DependentUpon>202106151226281_edit_paymentClass2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106181643405_edit_takeAway.resx">
+      <DependentUpon>202106181643405_edit_takeAway.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106181749156_add_paymentDateTime.resx">
+      <DependentUpon>202106181749156_add_paymentDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106181751006_edit_paymentDateTime.resx">
+      <DependentUpon>202106181751006_edit_paymentDateTime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

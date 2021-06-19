@@ -21,7 +21,7 @@ namespace EntityLayer.Concrete
         [StringLength(10)] // Müşterinin iletişim numarası
         public string CustomerPhoneNumber { get; set; }
 
-        // Siparişin durumu; 0 => sipariş alınmış ancak daha yola çıkmamış, 1 => gönderilmiş ancak daha ödenmemiş, 2 => gönderilmiş ve ödenmiş
+        // sipariş alındı => 0, sipariş hazır => 1, sipariş ödendi => 2
         public int Status { get; set; }
 
         // Siparişler

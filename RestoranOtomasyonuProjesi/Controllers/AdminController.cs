@@ -29,9 +29,9 @@ namespace RestoranOtomasyonuProjesi.Controllers
             return View();
         }
 
-        public ActionResult AddUser(string name, string phone, string password)
+        public ActionResult AddUser(string name, string phone, string password, string role)
         {
-            if (name != "" && phone != "" && password != "")
+            if (name != "" && phone != "" && password != "" && role != "")
             {
                 if (um.GetByPhoneNumber(phone) == null) // kullanıcı yoktur kayıt yapılabilir
                 {
@@ -44,7 +44,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
                         LastLogin = DateTime.Now,
                         LastPasswordChange = DateTime.Now,
                         Status = true,
-                        Role = "staff",
+                        Role = role,
                     };
                     um.AddUser(user);
                     return Json(new { errMessage = "", confirm = true }, JsonRequestBehavior.AllowGet);
@@ -87,9 +87,14 @@ namespace RestoranOtomasyonuProjesi.Controllers
             User user = um.GetByID(id);
             if (user != null)
             {
-                user.Status = status;
-                um.UpdateUser(user);
-                return Json(new { errMessage = "", confirm = true }, JsonRequestBehavior.AllowGet);
+                if(user.Role == "admin" && !status && um.GetAdminCount() < 2)
+                    return Json(new { errMessage = "En az bir admin kalmalıdır.", confirm = false }, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    user.Status = status;
+                    um.UpdateUser(user);
+                    return Json(new { errMessage = "", confirm = true }, JsonRequestBehavior.AllowGet);
+                }
             }
             return Json(new { errMessage = "Kullanıcı bulunamadı.", confirm = false }, JsonRequestBehavior.AllowGet);
         }

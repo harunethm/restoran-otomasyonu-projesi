@@ -29,10 +29,10 @@
                             {
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="form-check cb_orders" data-id="@order.OrderID" data-price="@order.Product.Price"/>
+                                        <input type="checkbox" class="form-check cb_orders" data-id="@order.OrderID" data-price="@order.Product.Price.ToString()" />
                                     </td>
                                     <td class="text-center">@order.Product.Name</td>
-                                    <td class="text-end">@order.Product.Price</td>  
+                                    <td class="text-end">@order.Product.Price</td>
                                 </tr>
                             }
                         }
@@ -60,77 +60,102 @@
             </div>
             <br />
             <div class="form-check form-check-inline">
-                <input type="radio" checked id="rb_Nakit" name="rb_Payment" class="form-check-input">
+                <input type="radio" checked id="rb_Nakit" name="rb_Payment" data-method="0" class="form-check-input">
                 <label class="form-check-label" for="rb_Nakit">Nakit</label>
             </div>
             <div class="form-check form-check-inline">
-                <input type="radio" id="rb_KrediKarti" name="rb_Payment" class="form-check-input">
+                <input type="radio" id="rb_KrediKarti" name="rb_Payment" data-method="1" class="form-check-input">
                 <label class="form-check-label" for="rb_KrediKarti">Kredi Kartı</label>
             </div>
             <div class="form-check form-check-inline">
-                <input type="radio" id="rb_Serve" name="rb_Payment" class="form-check-input">
+                <input type="radio" id="rb_Serve" name="rb_Payment" data-method="2" class="form-check-input">
                 <label class="form-check-label" for="rb_Serve">İkram Et</label>
             </div>
             <span class="badge bg-success" id="bg_odenecekTutar"></span>
-            <button class="btn btn-primary float-end">Öde</button>
+            <button class="btn btn-primary float-end" id="pay">Öde</button>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
 
-    $("#cb_discount").change(function () {
-        $('#inp_discount').prop("disabled", !this.checked).prop("value", "0");
-    });
 
-    $("#checkAll").click(function () {
-        console.log("1");
-        $('.cb_orders').prop('checked', this.checked);
 
-        if (this.checked)
-            $('#totalPrice').val($("#checkAll").attr("data-total"));
-        else
-            $('#totalPrice').val("0");
-    });
+    $(document).ready(function () {
 
-    $('.cb_orders').click(function () {
-        console.log("2");
+        $("#cb_discount").change(function () {
+            $('#inp_discount').prop("disabled", !this.checked).prop("value", "0");
+        });
 
-        var price = $(this).data('price');
-        if (this.checked)
-            $('#totalPrice').val(parseInt($('#totalPrice').val()) + parseInt(price));
-        else
-            $('#totalPrice').val(parseInt($('#totalPrice').val()) - parseInt(price));
-    });
+        $("#checkAll").click(function () {
+            $('.cb_orders').prop('checked', this.checked);
 
-    $('tbody tr').click(function (event) {
-        if (event.target.type !== 'checkbox') {
-            $(':checkbox', this).trigger('click');
-        }
-    });
+            if (this.checked) {
+                var total = 0.0;
+                $('.cb_orders').each(function () {
+                    var price = $(this).data('price') + "";
+                    total += parseFloat(price.replace(',', '.'));
+                    console.log(total);
+                })
+                $('#totalPrice').val(total);
+            }
+            else
+                $('#totalPrice').val("0");
+        });
 
-    $(document).ready(function() {
-        $("html").dblclick(function () {
-            var id = new Array();
+        $('.cb_orders').click(function () {
+
+            var price = $(this).data('price') + "";
+            price = price.replace(',', '.');
+            if (this.checked)
+                $('#totalPrice').val(parseFloat($('#totalPrice').val()) + parseFloat(price));
+            else
+                $('#totalPrice').val(parseFloat($('#totalPrice').val()) - parseFloat(price));
+        });
+
+        $('tbody tr').click(function (event) {
+            if (event.target.type !== 'checkbox') {
+                $(':checkbox', this).trigger('click');
+            }
+        });
+
+        $("#pay").click(function () {
+            var arr = new Array();
             $(".cb_orders:checked").each(function () {
-
-                id.push($(this).attr("data-id"));
+                arr.push($(this).attr("data-id"));
             });
 
+            var url = '@Url.Action("Pay", "Payment")';
+            var discount = !$('#inp_discount').attr('disabled') ? parseFloat(($('#inp_discount').val() + '').replace(',', '.')) : 0;
 
-            $.ajax({
-                url: "@Url.Action("DiziAl", "Payment")",
-                type: 'post',
-                dataType: 'json',
-                data: JSON.stringify(id),
-                contentType: 'application/json; charset=utf-8',
-                success: function (result) { },
-                error: function (e) { },
+            var method = 0;
+            method = parseInt($('[name=rb_Payment]:checked').data('method'));
+
+            var data = {orders:arr ,discount:discount, paymentMethod:method};
+
+            ajax(url, data, function (fdata) {
+                console.log('success');
+                if (!fdata.confirm)
+                    window.location.reload();
+                else
+                    window.location.href = fdata.destination;
+            }, function () {
+                    console.log('error');
             });
         });
 
 
     });
-
+    function ajax(url, data, success, error) {
+        $.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: success,
+            error: error,
+        });
+    }
 
 </script>

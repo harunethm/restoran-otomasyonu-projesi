@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Concrete\CashRegister.cs" />
     <Compile Include="Concrete\Category.cs" />
+    <Compile Include="Concrete\Payment.cs" />
     <Compile Include="Concrete\Order.cs" />
     <Compile Include="Concrete\Product.cs" />
     <Compile Include="Concrete\Receipt.cs" />

@@ -1,8 +1,6 @@
 ﻿
 @{
     ViewBag.Title = "LogIn";
-    List<EntityLayer.Concrete.User> users = ViewBag.users;
-    EntityLayer.Concrete.User u = ViewBag.u != null ? ViewBag.u : null;
     Layout = "~/Views/Shared/_LogInLayout.cshtml";
 }
 
@@ -27,7 +25,7 @@
 
             <div class="input-group mt-2">
                 <span class="input-group-text"><i class="fas fa-key"></i></span>
-                <input type="password" class="form-control" name="Password" placeholder="Şifre" value="@(u != null ? u.Password : "")" id="password">
+                <input type="password" class="form-control" name="Password" placeholder="Şifre" id="password">
                 <span role="button" class="input-group-text" id="showPassword"><i class="fas fa-eye"></i></span>
             </div>
             <br />

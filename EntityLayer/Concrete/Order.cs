@@ -38,5 +38,8 @@ namespace EntityLayer.Concrete
         // Siparişleri alan garsonun ID'si
         public int UserID { get; set; }
         public virtual User User { get; set; }
+
+        public ICollection<Payment> Payments { get; set; }
+
     }
 }

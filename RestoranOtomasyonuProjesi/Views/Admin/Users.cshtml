@@ -14,6 +14,7 @@
     <table class="table table-bordered">
         <thead>
             <tr class="text-center">
+                <th>Rol</th>
                 <th>İsim Soyisim</th>
                 <th>Telefon Numarası</th>
                 <th>Kayıt Tarihi</th>
@@ -30,6 +31,7 @@
                     if (user.Status)
                     {
                         <tr class="text-center">
+                            <td>@(user.Role == "admin" ? "Admin" : "Personel")</td>
                             <td>@user.Name</td>
                             <td>@user.PhoneNumber</td>
                             <td>@user.RegisterDate.ToShortDateString()</td>
@@ -63,6 +65,7 @@
                     if (!user.Status)
                     {
                         <tr class="text-center">
+                            <td>@(user.Role == "admin" ? "Admin" : "Personel")</td>
                             <td>@user.Name</td>
                             <td>@user.PhoneNumber</td>
                             <td>@user.RegisterDate.ToShortDateString()</td>
@@ -80,7 +83,7 @@
             else
             {
                 <tr>
-                    <td colspan="6" class="text-center">Kullanıcı bulunamadı...</td>
+                    <td colspan="7" class="text-center">Kullanıcı bulunamadı...</td>
                 </tr>
             }
         </tbody>
@@ -132,6 +135,14 @@
                     <input type="password" class="form-control" placeholder="Şifre" name="Password" id="modalInputPassword">
                     <span class="input-group-text" id="passwordVisual"><i class="fas fa-eye"></i></span>
                 </div>
+
+                <div class="input-group mb-2">
+                    <label class="input-group-text col-3" for="userRole">Rol</label>
+                    <select class="form-select" id="userRole">
+                        <option value="staff">Personel</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -159,6 +170,7 @@
                 $('#modalInputPhone').val($(button).data('phone'));
                 $('#modalInputPassword').val($(button).data('password'));
                 $('#modalInputPassword').attr("type", "password");
+                $('#userRole').val('admin');
             }
             else {
                 $('#userID').val("");
@@ -167,6 +179,8 @@
                 $('#modalInputPhone').val("");
                 $('#modalInputPassword').val("");
                 $('#modalInputPassword').attr("type", "password");
+                $('#userRole').val('staff');
+
             }
         });
 
@@ -202,7 +216,7 @@
             var type = $(this).data('type');
 
             if (type == "edit") {
-                var data = "id:" + $('#userID').val() + ",name:'" + $('#modalInputName').val() + "',phone:'" + $('#modalInputPhone').val() + "',password:'" + $('#modalInputPassword').val() + "'";
+                var data = "id:" + $('#userID').val() + ",name:'" + $('#modalInputName').val() + "',phone:'" + $('#modalInputPhone').val() + "',password:'" + $('#modalInputPassword').val() + "',role:'" + $('#userRole:selected').val()+"'";
                 ajax('@Url.Action("EditUser", "Admin")', data, function (data) {
                     if (data.confirm)
                         location.reload();

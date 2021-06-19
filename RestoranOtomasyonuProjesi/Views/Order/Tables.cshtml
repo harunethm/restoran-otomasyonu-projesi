@@ -3,8 +3,6 @@
 @{
     ViewBag.Title = "Tables";
     List<Table> tables = ViewBag.tables;
-    //List<Receipt> receipts = ViewBag.receipts;
-    //List<Order> orders = ViewBag.orders;
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -77,6 +75,7 @@
             <div class="modal-body ">
                 <div class="row">
                     <button class="btn btn-warning mb-3 btnTableOptions" data-type="rezervation" data-id="">Rezerve Et</button>
+                    <button class="btn btn-warning mb-3 btnTableOptions" data-type="rezervationCancel" data-id="">Rezervasyonu İptal Et</button>
                     <button class="btn btn-success mb-3 btnTableOptions" data-type="order" data-id="">Sipariş Al</button>
                     <button class="btn btn-primary mb-3 btnTableOptions" data-type="payment" data-id="">Ödeme Al</button>
                 </div>
@@ -108,14 +107,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @*<tr>
-                                @foreach (var product in sepettekiler)
-                                {
-                                    <td class="text-start col-4">@product.Name</td>
-                                    <td class="text-center col-4">@product.Amount</td>
-                                    <td class="text-end col-4">@product.Price TL</td>
-                                }
-                            </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -144,16 +135,20 @@
             $('.btnTableOptions[data-type="rezervation"]').attr('hidden', false);
             $('.btnTableOptions[data-type="order"]').attr('hidden', false);
             $('.btnTableOptions[data-type="payment"]').attr('hidden', false);
+            $('.btnTableOptions[data-type="rezervationCancel"]').attr('hidden', false);
             var availability = $('.tableAvailability[data-id=' + id + ']').data('availability');
             switch (availability) {
                 case 0:
                     $('.btnTableOptions[data-type="payment"]').attr('hidden', true);
+                    $('.btnTableOptions[data-type="rezervationCancel"]').attr('hidden', true);
                     break;
                 case 1:
                     $('.btnTableOptions[data-type="rezervation"]').attr('hidden', true);
+                    $('.btnTableOptions[data-type="rezervationCancel"]').attr('hidden', true);
                     break;
                 case 2:
                     $('.btnTableOptions[data-type="rezervation"]').attr('hidden', true);
+                    $('.btnTableOptions[data-type="payment"]').attr('hidden', true);
                 default:
                     break;
             }

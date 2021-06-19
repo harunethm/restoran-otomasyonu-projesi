@@ -21,6 +21,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
         OrderManager om = new OrderManager(new DalEfOrder());
         UserManager um = new UserManager(new DalEfUser());
         ReceiptManager rm = new ReceiptManager(new DalEfReceipt());
+        PaymentManager pam = new PaymentManager(new DalEfPayment());
         #endregion
 
         #region masa işlemleri
@@ -43,7 +44,6 @@ namespace RestoranOtomasyonuProjesi.Controllers
                         Receipt receipt = new Receipt()
                         {
                             Discount = 0,
-                            PaymentMethod = 0,
                             ReceiptDate = DateTime.Now,
                             Status = true,
                             Total = 0,
@@ -58,6 +58,10 @@ namespace RestoranOtomasyonuProjesi.Controllers
                     {
                         case "rezervation":
                             table.Availability = 2;
+                            tm.Update(table);
+                            return Json(new { errMessage = "", confirm = true, destination = Url.Action("Tables", "Order") }, JsonRequestBehavior.AllowGet);
+                        case "rezervationCancel":
+                            table.Availability = 0;
                             tm.Update(table);
                             return Json(new { errMessage = "", confirm = true, destination = Url.Action("Tables", "Order") }, JsonRequestBehavior.AllowGet);
                         case "order":
@@ -106,9 +110,11 @@ namespace RestoranOtomasyonuProjesi.Controllers
         {
             // TODO paket siparişleri de bu ekrana dahil et
             List<Order> orders = om.GetForOrdersPage();
-            List<Table> tables = tm.GetTablesForOrders();
+            List<Table> tables = tm.GetForOrdersPage();
+            List<TakeAway> takeAways = tam.GetForOrdersPage();
             ViewBag.orders = orders;
             ViewBag.tables = tables;
+            ViewBag.takeAways = takeAways;
             return View();
         }
 
@@ -117,10 +123,22 @@ namespace RestoranOtomasyonuProjesi.Controllers
             if (amount >= 0)
             {
                 Order order = om.GetByID(id);
-                order.Amount = amount;
+                if (amount == 0)
+                    order.Status = 4;
+                else
+                    order.Amount = amount;
                 om.Update(order);
+                if (om.GetByReceiptID(order.ReceiptID).Count(x => x.Status > 2) == om.GetByReceiptID(order.ReceiptID).Count()) // verilen tüm siparişler hazır, iptal edilmiş veya geçmiş sipariş ise
+                {
+                    Table t = tm.GetByReceiptID(order.ReceiptID);
+                    t.Availability = 0;
+                    t.Receipt = null;
+                    t.OpeningDate = null;
+                    tm.Update(t);
+                }
                 return Json(new { confirm = true, errMessage = "" }, JsonRequestBehavior.AllowGet);
             }
+
             return Json(new { confirm = false, errMessage = "Sipariş miktarı eksi olamaz." }, JsonRequestBehavior.AllowGet);
         }
 
@@ -129,6 +147,14 @@ namespace RestoranOtomasyonuProjesi.Controllers
             Order order = om.GetByID(id);
             order.Status = status;
             om.Update(order);
+            if (om.GetByReceiptID(order.ReceiptID).Count(x => x.Status > 2) == om.GetByReceiptID(order.ReceiptID).Count()) // verilen tüm siparişler hazır, iptal edilmiş veya geçmiş sipariş ise
+            {
+                Table t = tm.GetByReceiptID(order.ReceiptID);
+                t.Availability = 0;
+                t.Receipt = null;
+                t.OpeningDate = null;
+                tm.Update(t);
+            }
             return Json(new { confirm = true, errMessage = "" }, JsonRequestBehavior.AllowGet);
         }
         #endregion
@@ -137,18 +163,84 @@ namespace RestoranOtomasyonuProjesi.Controllers
         [HttpGet]
         public ActionResult TakeAway()
         {
-            ViewBag.takeAways = tam.ListAll();
-            ViewBag.categories = cm.ListAll();
+            ViewBag.categories = cm.GetForMenu();
             ViewBag.products = pm.ListAll();
             return View();
         }
 
-        [HttpPost]
-        public ActionResult TakeAway(TakeAway takeAway)
+        public ActionResult TakeOrder(List<Order> orders, string adress, string name, string phoneNumber)
         {
-            // TODO adres bilgisini, siparişleri al ve bir fiş oluşturup bütün hepsini kaydet
-            return View();
+
+            Receipt receipt = new Receipt()
+            {
+                Discount = 0,
+                ReceiptDate = DateTime.Now,
+                Status = true,
+                Paid = 0,
+            };
+            rm.AddReceipt(receipt);
+            receipt = rm.GetLast();
+            foreach (var item in orders)
+            {
+                item.AmountPaid = 0;
+                item.Description = "";
+                item.Status = 1;
+                item.OrderDate = DateTime.Now;
+                item.ReceiptID = receipt.ReceiptID;
+                User user = Session["user"] as User;
+                item.UserID = user.UserID;
+
+                receipt.Total += pm.GetByID(item.ProductID).Price;
+                om.AddOrder(item);
+            }
+            rm.Update(receipt);
+            tam.AddTakeAway(new TakeAway()
+            {
+                CustomerAdress = adress,
+                CustomerName = name,
+                CustomerPhoneNumber = phoneNumber,
+                ReceiptID = receipt.ReceiptID,
+                Status = 0,
+            });
+
+            return Json(new { confirm = true, errMessage = "", destination = Url.Action("Orders", "Order") }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult TAStatusChange(int id, int status)
+        {
+            Order order = om.GetByID(id);
+            // TODO ödenmiş olarak işlemleri yap(kasa receipt payment)
+            order.AmountPaid = order.Amount;
+            order.Status = status;
+            om.Update(order);
+
+            CashRegister cash = crm.IsDayStarted();
+            cash.AmountEarned += (pm.GetByID(order.ProductID).Price * order.Amount);
+            crm.Update(cash);
+
+            Receipt receipt = rm.GetByID(order.ReceiptID);
+            receipt.Paid = receipt.Total;
+            rm.Update(receipt);
+
+            Payment payment = new Payment()
+            {
+                OrderID = id,
+                PaymentDateTime = DateTime.Now,
+                Amount = order.Amount,
+                PaymentMethod = 3,
+                Total = receipt.Total,
+            };
+            pam.Add(payment);
+
+            if (om.GetByReceiptID(order.ReceiptID).Count(x => x.Status > 2) == om.GetByReceiptID(order.ReceiptID).Count()) // verilen tüm siparişler hazır, iptal edilmiş veya geçmiş sipariş ise
+            {
+                TakeAway t = tam.GetByReceiptID(order.ReceiptID);
+                t.Status = 2;
+                tam.Update(t);
+            }
+            return Json(new { confirm = true, errMessage = "" }, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
         #region masa siparişi işlemleri
@@ -255,42 +347,6 @@ namespace RestoranOtomasyonuProjesi.Controllers
             }
             return Json(new { errMessage = "Bir şeyler ters gitti.", confirm = false }, JsonRequestBehavior.AllowGet);
         }
-
-        /*public ActionResult OrderInput(int productID, int tableID, int amount)
-        {
-            Table table = tm.GetByID(tableID);
-            Receipt receipt = rm.GetByID((int)table.ReceiptID);
-            List<Order> ordersInCart = om.GetInCartByReceiptID(receipt.ReceiptID);
-            bool flag = true;
-            foreach (var item in ordersInCart)
-            {
-                if (item.ProductID == productID) // eğer ürün zaten sepette varsa miktarını arttır veya azalt
-                {
-                    item.Amount = amount;
-                    om.Update(item);
-                    flag = false; // ürün zaten sepette var yeni ürün eklenmesine gerek yok
-                    return Json(new { errMessage = "", confirm = true, destination = "" }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            if (flag) // ürün sepette yok yeni ürün eklenmeli
-            {
-                User user = Session["user"] as User;
-                Order order = new Order()
-                {
-                    Amount = amount,
-                    AmountPaid = 0,
-                    Description = "",
-                    OrderDate = DateTime.Now,
-                    ProductID = productID,
-                    ReceiptID = receipt.ReceiptID,
-                    Status = 0,
-                    UserID = user.UserID,
-                };
-                om.AddOrder(order);
-                return Json(new { errMessage = "", confirm = true, destination = "" }, JsonRequestBehavior.AllowGet);
-            }
-            return Json(new { errMessage = "Bir şeyler ters gitti.", confirm = false, destination = "" }, JsonRequestBehavior.AllowGet);
-        }*/
         #endregion
     }
 }

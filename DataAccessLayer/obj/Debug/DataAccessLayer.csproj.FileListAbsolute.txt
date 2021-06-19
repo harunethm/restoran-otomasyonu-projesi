@@ -16,3 +16,11 @@ C:\restoran-otomasyonu-projesi\DataAccessLayer\bin\Debug\EntityLayer.dll.config
 C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.mig.resources
 C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.GenerateResource.cache
 C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.mig1.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.new_PaymentTable.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.edit_paymentClass.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.edit_paymentClass1.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.edit_TakeAway.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.edit_receiptClass.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.edit_paymentClass2.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.add_paymentDateTime.resources
+C:\restoran-otomasyonu-projesi\DataAccessLayer\obj\Debug\DataAccessLayer.Migrations.edit_paymentDateTime.resources

@@ -6,7 +6,6 @@
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 
-@*<form method="post" action="@Url.Action("TakeAway","Order")">*@
 <div class="justify-content-center">
     <div class="col-lg-6 col-md-8 container container-fluid">
         <!--#region menü-->
@@ -15,7 +14,7 @@
             foreach (var category in categories)
             {
                 <br />
-                <h4 class="text-center" id="@category.CategoryName">@category.CategoryName</h4>
+                <h4 class="text-center">@category.CategoryName</h4>
                 <table class="table small">
                     <tr>
                         <th class="text-center">Sipariş Sil</th>
@@ -30,18 +29,17 @@
                         {
                             <tr>
                                 <td class="col-1">
-                                    <button class="btn btn-danger float-start" name="siparisAzalt" id="btn_siparisAzalt_@product.ProductID" value="@product.ProductID">
+                                    <button class="btn btn-danger float-start btnSiparis" data-id="@product.ProductID" data-type="minus">
                                         -
                                     </button>
                                 </td>
                                 <td class="text-center col-4">@product.Name</td>
                                 <td class="text-center col-3">@product.Price TL</td>
                                 <td class="text-center col-3">
-                                    <input type="number" class="form-control col-1 text-center" value="0" id="orderAmount_@product.ProductID" />
-                                    <!--masaya ait sparişler içerisinden bu ürünün sipariş adedini getir-->
+                                    <input type="number" class="form-control col-1 text-center inputSiparis" value="0" min="0" data-id="@product.ProductID" data-name="@product.Name" data-price="@product.Price.ToString()" />
                                 </td>
                                 <td class="col-1">
-                                    <button class="btn btn-success float-end" name="siparisArttir" id="btn_siparisArttir_@product.ProductID" value="@product.ProductID">
+                                    <button class="btn btn-success float-end btnSiparis" data-id="@product.ProductID" data-type="plus">
                                         +
                                     </button>
                                 </td>
@@ -67,27 +65,28 @@
 
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item">
-                        <button class="btn btn-outline-danger m-2" name="btn_iptal">
+                        <button class="btn btn-outline-danger m-2" id="btnCancel" data-status="4">
                             <i class="fas fa-times"></i>
                             İptal
                         </button>
                     </li>
+
                     <li class="nav-item">
-                        <button class="btn btn-outline-primary m-2" type="button" data-bs-toggle="modal" data-bs-target="#sepet" name="btn_sepet">
+                        <button class="btn btn-outline-primary m-2" type="button" data-bs-toggle="modal" data-bs-target="#sepet" id="tableInfo">
                             <i class="fas fa-shopping-cart"></i>
                             Sepet
                         </button>
                     </li>
 
                     <li class="nav-item">
-                        <button class="btn btn-outline-warning m-2" type="button" data-bs-toggle="modal" data-bs-target="#adress" name="btn_adress">
+                        <button class="btn btn-outline-warning m-2" type="button" data-bs-toggle="modal" data-bs-target="#adress" id="btnAdress">
                             <i class="fas fa-map-marker-alt"></i>
-                            Adres
+                            Bilgiler
                         </button>
                     </li>
 
                     <li class="nav-item">
-                        <button class="btn btn-outline-success m-2" name="btn_onayla">
+                        <button class="btn btn-outline-success m-2" id="btnConfirm" data-status="1">
                             <i class="fas fa-check"></i>
                             Onayla
                         </button>
@@ -98,7 +97,6 @@
     </nav>
     <!--#endregion-->
 </div>
-@*</form>*@
 
 <!--#region Modal Sepet-->
 <div class="modal fade" id="sepet" tabindex="-1">
@@ -111,7 +109,7 @@
             </div>
 
             <div class="modal-body">
-                <table class="table">
+                <table class="table" id="cart">
                     <tr>
                         <th class="text-start col-4">ürün Adı</th>
                         <th class="text-center col-4">Sipariş Adedi</th>
@@ -131,7 +129,7 @@
             <div class="modal-footer">
                 <h5 class="me-auto">
                     Toplam Fiyat :
-                    <span class="badge bg-success">150 TL</span>
+                    <span class="badge bg-success" id="badgePrice">0 TL</span>
                 </h5>
                 <button class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Kapat</button>
             </div>
@@ -153,34 +151,120 @@
             <div class="modal-body">
                 <div class="input-group mb-2">
                     <span class="input-group-text col-4">Ad - Soyad</span>
-                    <input type="text" class="form-control" placeholder="Ad Soyad">
+                    <input type="text" class="form-control" placeholder="Ad Soyad" id="inputName">
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text col-3">Tel No</span>
-                    <input type="tel" class="form-control" placeholder="5xxxxxxxxx" maxlength="10">
+                    <input type="tel" class="form-control" placeholder="5xxxxxxxxx" maxlength="10" id="inputPhone">
                 </div>
                 <div class="input-group mb-2">
                     <span class="input-group-text col-3">Adres</span>
-                    <input type="text" class="form-control" placeholder="Adres" maxlength="100">
+                    <input type="text" class="form-control" placeholder="Adres" maxlength="100" id="inputAdress">
                 </div>
             </div>
 
             <div class="modal-footer">
                 <button class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Kapat</button>
-                <button class="btn btn-sm btn-outline-success" data-bs-dismiss="modal">Kaydet</button>
+                <button class="btn btn-sm btn-outline-success" data-bs-dismiss="modal" id="saveInfo">Kaydet</button>
             </div>
 
         </div>
     </div>
 </div>
 <!--#endregion-->
-@*<script type="text/javascript">
-        $('document').ready(function(){
-            $('#siparisArttir').on('click', function () {
-                $('#orderAmount').val() = parseInt($('#orderAmount').val().toString()) + 1;
-            });
-            $('#siparisAzalt').on('click', function () {
-                $('#orderAmount').val() = parseInt($('#orderAmount').val().toString()) - 1;
-            });
+
+<script type="text/javascript">
+    $('document').ready(function () {
+
+        var adress = "";
+        var name = "";
+        var phone = "";
+
+        $('.btnSiparis').on('click', function () {
+            var id = $(this).data('id');
+            var input = $('.inputSiparis[data-id=' + id + ']');
+            if($(this).data('type') == 'minus' && input.val() > 0)
+                input.val(parseInt(input.val()) - 1);
+            else if ($(this).data('type') == 'plus')
+                input.val(parseInt(input.val()) + 1);
         });
-    </script>*@
+
+        $('#saveInfo').click(function () {
+            adress = $('#inputAdress').val();
+            name = $('#inputName').val();
+            phone = $('#inputPhone').val();
+        });
+
+        $('#btnConfirm').click(function () {
+            var orders = [];
+            $('.inputSiparis').each(function () {
+                if ($(this).val() > 0) {
+                    orders.push({ ProductID: $(this).data('id'), Amount: parseInt($(this).val()) });
+                }
+            });
+            var url = '@Url.Action("TakeOrder", "Order")';
+                    console.log(orders);
+            if (orders && adress && name && phone && phone.length == 10) {
+                if (orders.length > 0) {
+                    var data = {
+                        orders: orders,
+                        adress: adress,
+                        name: name,
+                        phoneNumber: phone,
+                    };
+                    console.log(data);
+                    ajax(url, data, function (fdata) {
+                        if (fdata.confirm)
+                            window.location.href = fdata.destination;
+                        else
+                            console.log(fdata.errMessage);
+                    }, function (fdata) {
+                        console.log('error');
+                        console.log(fdata);
+                    });
+                }
+                else {
+                    alert('Lütfen en az 1 adet sipariş giriniz.')
+                }
+            }
+            else {
+                alert('Lütfen bilgileri eksiksiz doldurunuz.');
+            }
+
+        });
+
+        $('#tableInfo').click(function () {
+                var total = 0;
+            $('.inputSiparis').each(function () {
+                if ($(this).val() > 0) {
+                    var tableData = '<tr class="sepet">' +
+                        '<td class="text-start col-4">' + $(this).data('name') + '</td>' +
+                        '<td class="text-center col-4">' + $(this).val() + '</td>' +
+                        '<td class="text-end col-4">' + $(this).data('price') + ' TL</td>' +
+                        '</tr>';
+                    total += parseFloat(($(this).data('price') + "").replace(',', '.')) * parseInt($(this).val());
+                    $('#cart > tbody:last-child').append(tableData);
+                }
+            });
+            $('#badgePrice').html((total + "").replace('.', ',') + " TL");
+        });
+
+        $('#sepet').on('hide.bs.modal', function () {
+            $('.sepet').remove();
+        });
+    });
+
+
+    function ajax(url, data, success, error) {
+        $.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: success,
+            error: error,
+        });
+    }
+
+</script>
