@@ -1,5 +1,4 @@
 ﻿using BusinessLayer.Concrete;
-using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -18,7 +17,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
         public ActionResult Entry()
         {
             CategoryManager categoryManager = new CategoryManager(new DalEfCategory());
-            ViewBag.categories = categoryManager.ListAll();
+            ViewBag.categories = categoryManager.GetForMenu();
             ProductManager productManager = new ProductManager(new DalEfProduct());
             ViewBag.products = productManager.ListAll();
             return View();
@@ -35,7 +34,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
             User user = um.GetByPhoneNumber(phone);
 
             // kullanıcı var ve şifresi doğru ise
-            if (user != null && user.Password.Equals(password)) 
+            if (user != null && user.Password.Equals(password) && user.Status)
             {
                 FormsAuthentication.SetAuthCookie(user.PhoneNumber, false);
                 Session["user"] = user;
@@ -61,7 +60,8 @@ namespace RestoranOtomasyonuProjesi.Controllers
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
-            Session.Remove("userID");
+            Session.Clear();
+            //Session.Abandon();
             return RedirectToAction("LogIn", "LogIn");
         }
     }

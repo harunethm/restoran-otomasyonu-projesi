@@ -57,14 +57,8 @@
     <br />
 </form>
 
-<footer class="card-footer mt-auto position-sticky">
-    <div class="container container-fluid text-center">
-        <label>&copy; Harun Ethem ÇALIŞ &bull; @DateTime.Now.Year</label>
-    </div>
-</footer>
-
 <div class="modal fade" id="tableOptions" tabindex="-1">
-    <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -73,11 +67,11 @@
             </div>
 
             <div class="modal-body ">
-                <div class="row">
-                    <button class="btn btn-warning mb-3 btnTableOptions" data-type="rezervation" data-id="">Rezerve Et</button>
-                    <button class="btn btn-warning mb-3 btnTableOptions" data-type="rezervationCancel" data-id="">Rezervasyonu İptal Et</button>
-                    <button class="btn btn-success mb-3 btnTableOptions" data-type="order" data-id="">Sipariş Al</button>
-                    <button class="btn btn-primary mb-3 btnTableOptions" data-type="payment" data-id="">Ödeme Al</button>
+                <div class="col-5 mx-auto">
+                    <div class="row"><button class="btn btn-warning mb-3 btnTableOptions" data-type="rezervation" data-id="">Rezerve Et</button></div>
+                    <div class="row"><button class="btn btn-warning mb-3 btnTableOptions" data-type="rezervationCancel" data-id="">Rezervasyonu İptal Et</button></div>
+                    <div class="row"><button class="btn btn-success mb-3 btnTableOptions" data-type="order" data-id="">Sipariş Al</button></div>
+                    <div class="row"> <button class="btn btn-primary mb-3 btnTableOptions" data-type="payment" data-id="">Ödeme Al</button></div>
                 </div>
 
             </div>
@@ -88,7 +82,7 @@
 
 <!--#region Modal Sepet-->
 <div class="modal fade" id="sepet" tabindex="-1">
-    <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -101,9 +95,9 @@
                     <thead>
                         <tr>
                             <th class="text-start col-4">Ürün Adı</th>
-                            <th class="text-center col-4">Sipariş Adedi</th>
-                            <th class="text-center col-4">Sipariş Durumu</th>
-                            <th class="text-end col-4">Birim Fiyatı</th>
+                            <th class="text-center col-2">Sipariş Adedi</th>
+                            <th class="text-center col-3">Sipariş Durumu</th>
+                            <th class="text-end col-3">Birim Fiyatı</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -182,15 +176,13 @@
                 var total = 0;
                 for (var i = 0; i < orders.length; i += 4) {
                     var tableData = '<tr class="sepet">' +
-                        '<td class="text-start col-3">' + orders[i]+'</td>' +
-                        '<td class="text-center col-3">' + orders[i+1]+'</td>' +
+                        '<td class="text-start col-4">' + orders[i]+'</td>' +
+                        '<td class="text-center col-2">' + orders[i+1]+'</td>' +
                         '<td class="text-center col-3"><span class="badge ' + (orders[i+2] == 1 ? 'bg-info' : 'bg-success') + '">' + (orders[i+2] == 1 ? 'Hazırlanıyor' : 'Hazır' )+'</span></td>' +
                         '<td class="text-end col-3">' + orders[i+3] +' TL</td>' +
                             '</tr>';
-                    console.log(tableData);
-                    console.log(" ");
                     $('#cart > tbody:last-child').append(tableData);
-                    total += (parseFloat(orders[i+3]) * parseFloat(orders[i+1]));
+                    total += (parseFloat((orders[i+3] + "").replace(',', '.')) * parseFloat(orders[i+1]));
                 }
                 $('#spanTotalPrice').html(total + " TL");
 

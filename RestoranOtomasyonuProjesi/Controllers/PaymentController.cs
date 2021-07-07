@@ -18,11 +18,9 @@ namespace RestoranOtomasyonuProjesi.Controllers
         TableManager tm = new TableManager(new DalEfTable());
         CashRegisterManager crm = new CashRegisterManager(new DalEfCashRegister());
 
-        // GET: Payment
+        [HttpGet]
         public ActionResult Index(int receiptID)
         {
-            // TODO ödeme al
-
             List<Order> orders = om.GetByReceiptID(receiptID).OrderBy(x => x.Product.CategoryID).ToList();
             double totalPrice = rm.GetByID(receiptID).Total;
 
@@ -67,21 +65,21 @@ namespace RestoranOtomasyonuProjesi.Controllers
                         PaymentMethod = paymentMethod,
                         Total = total,
                     };
-                    CashRegister cashRegister = crm.IsDayStarted();
-                    if (paymentMethod == 2)
-                    {
-                        cashRegister.AmountServed += total;
-                    }
-                    else
-                    {
-                        cashRegister.AmountEarned += total - discount;
-                        cashRegister.AmountDiscount += discount;
-                    }
-                    crm.Update(cashRegister);
+                    
                     pm.Add(payment);
                     om.Update(item);
                 }
-
+                CashRegister cashRegister = crm.IsDayStarted();
+                if (paymentMethod == 2)
+                {
+                    cashRegister.AmountServed += total;
+                }
+                else
+                {
+                    cashRegister.AmountEarned += total - discount;
+                    cashRegister.AmountDiscount += discount;
+                }
+                crm.Update(cashRegister);
 
 
                 Receipt receipt = rm.GetByID(om.GetByID(orders[0]).ReceiptID);
@@ -99,14 +97,13 @@ namespace RestoranOtomasyonuProjesi.Controllers
                     Table t = tm.GetByReceiptID(receipt.ReceiptID);
                     t.Availability = 0;
                     t.OpeningDate = null;
-                    t.Receipt = null;
+                    t.ReceiptID = null;
                     tm.Update(t);
                     return Json(new { confirm = true, destination = Url.Action("Tables", "Order") }, JsonRequestBehavior.AllowGet);
                 }
                 return Json(new { confirm = false }, JsonRequestBehavior.AllowGet);
 
             }
-            // TODO kasaya kâr, indirim, ikram eklemesi yap
 
             return Json(new { confirm = false }, JsonRequestBehavior.AllowGet);
         }

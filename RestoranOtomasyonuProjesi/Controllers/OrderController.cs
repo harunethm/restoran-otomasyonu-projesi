@@ -108,7 +108,6 @@ namespace RestoranOtomasyonuProjesi.Controllers
         [HttpGet]
         public ActionResult Orders()
         {
-            // TODO paket siparişleri de bu ekrana dahil et
             List<Order> orders = om.GetForOrdersPage();
             List<Table> tables = tm.GetForOrdersPage();
             List<TakeAway> takeAways = tam.GetForOrdersPage();
@@ -209,7 +208,6 @@ namespace RestoranOtomasyonuProjesi.Controllers
         public ActionResult TAStatusChange(int id, int status)
         {
             Order order = om.GetByID(id);
-            // TODO ödenmiş olarak işlemleri yap(kasa receipt payment)
             order.AmountPaid = order.Amount;
             order.Status = status;
             om.Update(order);

@@ -8,38 +8,53 @@
 }
 
 
-<div class="justify-content-center">
-    <div class="col-lg-6 col-md-8 container container-fluid">
+<div class="row">
+    <div class="col"></div>
+    <div class="justify-content-center col-lg-6 col-md-8">
         <br />
         @foreach (var category in categories)
         {
             if (category.Status)
             {
                 <h4 class="text-center">@category.CategoryName</h4>
-                <table class="table small">
-                    <tr>
-                        <th>Ürün Adı</th>
-                        <th class="text-end">Fiyatı</th>
-                    </tr>
-                    @foreach (var product in products)
-                    {
-                        if (product.CategoryID == category.CategoryID && product.Status)
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th class="text-center">Ürün Açıklaması</th>
+                            <th class="text-end">Fiyatı</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in products)
                         {
-                            <tr>
-                                <td class="text-start col-4">@product.Name</td>
-                                <td class="text-end col-4">@product.Price TL</td>
-                            </tr>
+                            if (product.CategoryID == category.CategoryID && product.Status)
+                            {
+                                <tr>
+                                    <td class="text-start col-4">@product.Name</td>
+                                    <td class="text-center col-4 description">@product.Description</td>
+                                    <td class="text-end col-4">@product.Price TL</td>
+                                </tr>
+                            }
                         }
-                    }
+                    </tbody>
                 </table>
                 <br />
             }
         }
     </div>
+    <div class="col"></div>
 </div>
 
-<footer class="card-footer m-auto position-sticky">
-    <div class="container container-fluid text-center">
-        <label>&copy; Harun Ethem ÇALIŞ &bull; @DateTime.Now.Year</label>
-    </div>
+<footer class="form-control text-center position-sticky">
+    <h6>&copy; @DateTime.Now.Year - Harun Ethem ÇALIŞ</h6>
 </footer>
+
+<style type="text/css">
+    .description {
+        max-width: 210px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+</style>

@@ -239,7 +239,7 @@
                         '<td class="text-center col-4">' + orders[i+1]+'</td>' +
                         '<td class="text-end col-4">' + orders[i+2]+' TL</td>' +
                         '</tr>';
-                    total += parseFloat(orders[i + 2]);
+                    total += parseFloat((orders[i + 2] + "").replace(',', '.')) * orders[i + 1];
                     $('#cart > tbody:last-child').append(tableData);
                 }
                 $('#spanTotalPrice').html(total + " TL");

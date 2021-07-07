@@ -4,7 +4,6 @@ using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace RestoranOtomasyonuProjesi.Controllers
@@ -18,6 +17,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
         ProductManager pm = new ProductManager(new DalEfProduct());
         CashRegisterManager crm = new CashRegisterManager(new DalEfCashRegister());
         TableManager tm = new TableManager(new DalEfTable());
+        TakeAwayManager tam = new TakeAwayManager(new DalEfTakeAway());
         OrderManager om = new OrderManager(new DalEfOrder());
         #endregion
 
@@ -76,9 +76,9 @@ namespace RestoranOtomasyonuProjesi.Controllers
                 um.UpdateUser(user);
                 return Json(new { errMessage = "", confirm = true }, JsonRequestBehavior.AllowGet);
             }
-            else // kullanıcı yok veya daha önce kayıtlı
+            else // kullanıcı yok
             {
-                return Json(new { errMessage = "Kullanıcı zaten var.", confirm = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { errMessage = "Kullanıcı bulunamadı.", confirm = false }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -206,16 +206,15 @@ namespace RestoranOtomasyonuProjesi.Controllers
         #endregion
 
         #region istatistik işlemleri
+        [HttpGet]
         public ActionResult Statistics()
         {
             List<Statistic> statistics = new List<Statistic>() {
-                new Statistic() { StatisticHeader="En Çok Satan Ürün", StatisticValue= "Beyti"},
-                new Statistic() { StatisticHeader="En Çok Satan Kategori", StatisticValue= "Kırmızı Et"},
-                new Statistic() { StatisticHeader="Kâr", StatisticValue= "10.000 TL"},
-                new Statistic() { StatisticHeader="Zarar", StatisticValue= "10 TL"},
-                new Statistic() { StatisticHeader="asd", StatisticValue= "asdasdasd"},
-                new Statistic() { StatisticHeader="dsa", StatisticValue= "adsa"},
-                new Statistic() { StatisticHeader="asd", StatisticValue= "asdasdasdasdasdasdasdasdasdasdasdsdasdas"},
+                new Statistic() { StatisticHeader="En Çok Satan Ürün", StatisticValue= "Hamburger"},
+                new Statistic() { StatisticHeader="En Çok Satan Kategori", StatisticValue= "Soğuk İçecek"},
+                new Statistic() { StatisticHeader="En Çok Kâr", StatisticValue= "10.000 TL"},
+                new Statistic() { StatisticHeader="En Çok İndirim", StatisticValue= "100 TL"},
+                new Statistic() { StatisticHeader="En Çok İkram", StatisticValue= "100 TL"},
             };
             ViewBag.statistics = statistics;
             return View();
@@ -292,7 +291,6 @@ namespace RestoranOtomasyonuProjesi.Controllers
             else
                 return Json(new { errMessage = "Lütfen bilgileri eksiksiz giriniz.", confirm = false }, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult EditTable(int id, string name)
         {
             if (!string.IsNullOrEmpty(name))
@@ -318,5 +316,17 @@ namespace RestoranOtomasyonuProjesi.Controllers
                 return Json(new { errMessage = "Masa Bulunamadı.", confirm = false }, JsonRequestBehavior.AllowGet);
         }
         #endregion
+
+        #region paket sipariş işlemleri
+        [HttpGet]
+        public ActionResult TakeAways()
+        {
+            ViewBag.takeAways = tam.ListAll();
+            ViewBag.orders = om.ListAll();
+            return View();
+        }
+        
+        #endregion
+
     }
 }
