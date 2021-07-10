@@ -43,7 +43,8 @@
                                         data-id="@user.UserID"
                                         data-name="@user.Name"
                                         data-phone="@user.PhoneNumber"
-                                        data-password="@user.Password">
+                                        data-password="@user.Password"
+                                        data-role="@user.Role">
                                     <i class="fas fa-user-edit"></i>
                                 </button>
                                 <button class="btn btn-danger delete" name="btn" value="delete" type="button" data-bs-toggle="modal" data-bs-target="#eminMisiniz" data-id="@user.UserID" data-status="false">
@@ -170,7 +171,7 @@
                 $('#modalInputPhone').val($(button).data('phone'));
                 $('#modalInputPassword').val($(button).data('password'));
                 $('#modalInputPassword').attr("type", "password");
-                $('#userRole').val('admin');
+                $('#userRole').val($(button).data('role'));
             }
             else {
                 $('#userID').val("");
@@ -180,7 +181,6 @@
                 $('#modalInputPassword').val("");
                 $('#modalInputPassword').attr("type", "password");
                 $('#userRole').val('staff');
-
             }
         });
 
@@ -216,7 +216,7 @@
             var type = $(this).data('type');
 
             if (type == "edit") {
-                var data = "id:" + $('#userID').val() + ",name:'" + $('#modalInputName').val() + "',phone:'" + $('#modalInputPhone').val() + "',password:'" + $('#modalInputPassword').val() + "',role:'" + $('#userRole:selected').val()+"'";
+                var data = "id:" + $('#userID').val() + ",name:'" + $('#modalInputName').val() + "',phone:'" + $('#modalInputPhone').val() + "',password:'" + $('#modalInputPassword').val() + "',role:'" + $('#userRole option:selected').val()+"'";
                 ajax('@Url.Action("EditUser", "Admin")', data, function (data) {
                     if (data.confirm)
                         location.reload();

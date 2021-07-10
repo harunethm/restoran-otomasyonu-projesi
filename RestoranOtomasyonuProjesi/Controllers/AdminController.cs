@@ -60,11 +60,11 @@ namespace RestoranOtomasyonuProjesi.Controllers
             }
         }
 
-        public ActionResult EditUser(int id, string name, string phone, string password)
+        public ActionResult EditUser(int id, string name, string phone, string password, string role)
         {
             User user = um.GetByID(id); // orjinal kullanıcı
             User _ = um.GetByPhoneNumber(phone); // telefon numarasına kayıtlı kullanıcı
-            if (user != null && (_ == null || _.UserID == user.UserID)) // kullanıcı vardır ve daha önce kayıtlı değildir
+            if (user != null && (_ == null || _.UserID == user.UserID)) // kullanıcı vardır ve numara daha önce kayıtlı değildir
             {
                 user.Name = name;
                 user.PhoneNumber = phone;
@@ -73,6 +73,7 @@ namespace RestoranOtomasyonuProjesi.Controllers
                     user.Password = password;
                     user.LastPasswordChange = DateTime.Now;
                 }
+                user.Role = role;
                 um.UpdateUser(user);
                 return Json(new { errMessage = "", confirm = true }, JsonRequestBehavior.AllowGet);
             }
